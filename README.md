@@ -9,7 +9,7 @@ arbitrary-precision fixed-point decimal numbers.
 ## Installation
 
 ```
-go get github.com/processout/trader
+go get gopkg.in/processout/trader.v1
 ```
 
 ## Usage
