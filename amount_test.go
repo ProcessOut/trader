@@ -16,10 +16,20 @@ func getTrader() *Trader {
 	trader, _ := New(currencies, "usd")
 	return trader
 }
+func getTrader2() *Trader {
+	usd := decimal.NewFromFloat(1)
+	eur := decimal.NewFromFloat(0.8)
+	currencies := Currencies{
+		NewCurrency("USD", &usd),
+		NewCurrency("BAD", &eur),
+	}
+	trader, _ := New(currencies, "bad")
+	return trader
+}
 
 func TestNewAmount(t *testing.T) {
 	trader := getTrader()
-	d := decimal.NewFromFloat(4.2)
+	d, _ := decimal.NewFromString("4.2")
 
 	amount, err := trader.NewAmount(&d, "bad")
 	if err == nil {
@@ -36,6 +46,9 @@ func TestNewAmount(t *testing.T) {
 	if amount.Trader != trader {
 		t.Error("The trader should be the same pointer")
 	}
+	if amount.String(3) != "4.200" {
+		t.Error("Wrong value set: " + amount.String(3))
+	}
 
 	amount, err = trader.NewAmount(&d, "eur")
 	if err != nil {
@@ -46,6 +59,9 @@ func TestNewAmount(t *testing.T) {
 	}
 	if amount.Trader != trader {
 		t.Error("The trader should be the same pointer")
+	}
+	if amount.String(3) != "4.200" {
+		t.Error("Wrong value set: " + amount.String(3))
 	}
 }
 
@@ -67,6 +83,9 @@ func TestNewAmountFromFloat(t *testing.T) {
 	if amount.Trader != trader {
 		t.Error("The trader should be the same pointer")
 	}
+	if amount.String(3) != "4.200" {
+		t.Error("Wrong value set: " + amount.String(3))
+	}
 
 	amount, err = trader.NewAmountFromFloat(4.2, "eur")
 	if err != nil {
@@ -77,6 +96,9 @@ func TestNewAmountFromFloat(t *testing.T) {
 	}
 	if amount.Trader != trader {
 		t.Error("The trader should be the same pointer")
+	}
+	if amount.String(3) != "4.200" {
+		t.Error("Wrong value set: " + amount.String(3))
 	}
 }
 
@@ -103,6 +125,9 @@ func TestNewAmountFromString(t *testing.T) {
 	if amount.Trader != trader {
 		t.Error("The trader should be the same pointer")
 	}
+	if amount.String(3) != "4.200" {
+		t.Error("Wrong value set: " + amount.String(3))
+	}
 
 	amount, err = trader.NewAmountFromString("4.2", "eur")
 	if err != nil {
@@ -113,6 +138,9 @@ func TestNewAmountFromString(t *testing.T) {
 	}
 	if amount.Trader != trader {
 		t.Error("The trader should be the same pointer")
+	}
+	if amount.String(3) != "4.200" {
+		t.Error("Wrong value set: " + amount.String(3))
 	}
 }
 
@@ -126,8 +154,7 @@ func TestBaseCurrencyValue(t *testing.T) {
 	}
 
 	amount, _ = trader.NewAmountFromString("1", "eur")
-	f, _ := amount.BaseCurrencyValue().Float64()
-	if f != 1.25 {
+	if amount.BaseCurrencyValue().StringFixed(3) != "1.250" {
 		t.Error("The base currency value was wrongly converted")
 	}
 }
@@ -146,15 +173,14 @@ func TestBaseCurrencyAmount(t *testing.T) {
 	if a == amount {
 		t.Error("The base currency amount should have changed")
 	}
-	f, _ := a.Value.Float64()
-	if f != 1.25 {
+	if a.String(3) != "1.250" {
 		t.Error("The base currency amount was wrongly converted")
 	}
 }
 
 func TestToCurrency(t *testing.T) {
 	trader := getTrader()
-	amount, _ := trader.NewAmountFromString("1", "usd")
+	amount, _ := trader.NewAmountFromString("2", "usd")
 
 	a, err := amount.ToCurrency("bad")
 	if err == nil {
@@ -173,17 +199,239 @@ func TestToCurrency(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	f, _ := a.Value.Float64()
-	if f != 0.8 {
-		t.Error("The amount was wrongly converted")
+	if a.String(3) != "1.600" {
+		t.Error("The amount was wrongly converted: " + a.String(3))
 	}
 
 	a2, err := a.ToCurrency("usd")
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	f, _ = a2.Value.Float64()
-	if f != 1 {
-		t.Error("The amount was wrongly converted bad")
+	if a2.String(3) != "2.000" {
+		t.Error("The amount was wrongly converted: " + a2.String(3))
+	}
+}
+
+func TestAdd(t *testing.T) {
+	trader := getTrader()
+	trader2 := getTrader2()
+	amount, _ := trader.NewAmountFromString("2.3", "usd")
+	amount2, _ := trader2.NewAmountFromString("3.2", "bad")
+
+	s, err := amount2.Add(amount)
+	if err == nil {
+		t.Error("There should have been an error")
+	}
+
+	amount2, _ = trader.NewAmountFromString("3.2", "usd")
+	s, err = amount.Add(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "5.500" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	amount2, _ = amount2.ToCurrency("eur")
+	s, err = amount.Add(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "5.500" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	s, err = amount2.Add(amount)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "4.400" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("eur") {
+		t.Error("The amount currency was incorrectly set")
+	}
+}
+
+func TestSub(t *testing.T) {
+	trader := getTrader()
+	trader2 := getTrader2()
+	amount, _ := trader.NewAmountFromString("3.2", "usd")
+	amount2, _ := trader2.NewAmountFromString("2.3", "bad")
+
+	s, err := amount2.Sub(amount)
+	if err == nil {
+		t.Error("There should have been an error")
+	}
+
+	amount2, _ = trader.NewAmountFromString("2.3", "usd")
+	s, err = amount.Sub(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "0.900" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	amount2, _ = amount2.ToCurrency("eur")
+	s, err = amount.Sub(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "0.900" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	s, err = amount2.Sub(amount)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "-0.720" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("eur") {
+		t.Error("The amount currency was incorrectly set")
+	}
+}
+
+func TestMul(t *testing.T) {
+	trader := getTrader()
+	trader2 := getTrader2()
+	amount, _ := trader.NewAmountFromString("2.3", "usd")
+	amount2, _ := trader2.NewAmountFromString("3.2", "bad")
+
+	s, err := amount2.Mul(amount)
+	if err == nil {
+		t.Error("There should have been an error")
+	}
+
+	amount2, _ = trader.NewAmountFromString("3.2", "usd")
+	s, err = amount.Mul(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "7.360" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	amount2, _ = amount2.ToCurrency("eur")
+	s, err = amount.Mul(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(3) != "7.360" {
+		t.Error("The amount value was incorrectly computed: " + s.String(3))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	s, err = amount2.Mul(amount)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(4) != "5.8880" {
+		t.Error("The amount value was incorrectly computed: " + s.String(4))
+	}
+	if !s.Currency.Is("eur") {
+		t.Error("The amount currency was incorrectly set")
+	}
+}
+
+func TestDiv(t *testing.T) {
+	trader := getTrader()
+	trader2 := getTrader2()
+	amount, _ := trader.NewAmountFromString("2.3", "usd")
+	amount2, _ := trader2.NewAmountFromString("3.2", "bad")
+
+	s, err := amount2.Div(amount)
+	if err == nil {
+		t.Error("There should have been an error")
+	}
+
+	amount2, _ = trader.NewAmountFromString("3.2", "usd")
+	s, err = amount.Div(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(6) != "0.718750" {
+		t.Error("The amount value was incorrectly computed: " + s.String(6))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	amount2, _ = amount2.ToCurrency("eur")
+	s, err = amount.Div(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(6) != "0.718750" {
+		t.Error("The amount value was incorrectly computed: " + s.String(6))
+	}
+	if !s.Currency.Is("usd") {
+		t.Error("The amount currency was incorrectly set")
+	}
+
+	s, err = amount2.Div(amount)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if s == nil {
+		t.Error("A new amount should have been returned")
+	}
+	if s.String(10) != "1.1130434783" {
+		t.Error("The amount value was incorrectly computed: " + s.String(10))
+	}
+	if !s.Currency.Is("eur") {
+		t.Error("The amount currency was incorrectly set")
 	}
 }

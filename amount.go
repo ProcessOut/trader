@@ -1,6 +1,8 @@
 package trader
 
 import (
+	"fmt"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -91,67 +93,67 @@ func (a Amount) ToCurrency(code string) (*Amount, error) {
 
 // Add returns a new Amount corresponding to the sum of a and b. The
 // Currency of the returned amount is the same as the Currency of a (structure
-// on which Add(b) is called). The Trader of b is used to convert b to the
-// currency of a in order to do the addition. An error is returned if the
-// currency of a is not found in the Currencies slice of the Trader of b
+// on which Add(b) is called). Both a and b are converted to their base currency
+// to perform the operation, using their respective BaseCurrencyValues.
+// If their base currency differ, an error is returned
 func (a Amount) Add(b *Amount) (*Amount, error) {
-	n, err := b.ToCurrency(a.Currency.Code)
-	if err != nil {
-		return nil, err
+	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
+		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
+			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
 	}
 
-	c := a.Value.Add(*n.Value)
-	n.Value = &c
-	return n, nil
+	c := a.BaseCurrencyValue().Add(*b.BaseCurrencyValue())
+	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
+	return n.ToCurrency(a.Currency.Code)
 }
 
 // Sub returns a new Amount corresponding to the substraction of b from a. The
 // Currency of the returned amount is the same as the Currency of a (structure
-// on which Sub(b) is called). The Trader of b is used to convert b to the
-// currency of a in order to do the substraction. An error is returned if the
-// currency of a is not found in the Currencies slice of the Trader of b
+// on which Sub(b) is called). Both a and b are converted to their base currency
+// to perform the operation, using their respective BaseCurrencyValues.
+// If their base currency differ, an error is returned
 func (a Amount) Sub(b *Amount) (*Amount, error) {
-	n, err := b.ToCurrency(a.Currency.Code)
-	if err != nil {
-		return nil, err
+	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
+		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
+			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
 	}
 
-	c := a.Value.Sub(*b.Value)
-	n.Value = &c
-	return n, nil
+	c := a.BaseCurrencyValue().Sub(*b.BaseCurrencyValue())
+	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
+	return n.ToCurrency(a.Currency.Code)
 }
 
 // Mul returns a new Amount corresponding to the multiplication of a and b. The
 // Currency of the returned amount is the same as the Currency of a (structure
-// on which Mul(b) is called). The Trader of b is used to convert b to the
-// currency of a in order to do the multiplication. An error is returned if the
-// currency of a is not found in the Currencies slice of the Trader of b
+// on which Mul(b) is called). Both a and b are converted to their base currency
+// to perform the operation, using their respective BaseCurrencyValues.
+// If their base currency differ, an error is returned
 func (a Amount) Mul(b *Amount) (*Amount, error) {
-	n, err := b.ToCurrency(a.Currency.Code)
-	if err != nil {
-		return nil, err
+	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
+		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
+			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
 	}
 
-	c := a.Value.Mul(*n.Value)
-	n.Value = &c
-	return n, nil
+	c := a.BaseCurrencyValue().Mul(*b.BaseCurrencyValue())
+	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
+	return n.ToCurrency(a.Currency.Code)
 }
 
 // Div returns a new Amount corresponding to the division of a by b. The
 // Currency of the returned amount is the same as the Currency of a (structure
-// on which Div(b) is called). The Trader of b is used to convert b to the
-// currency of a in order to do the division. An error is returned if the
-// currency of a is not found in the Currencies slice of the Trader of b.
+// on which Div(b) is called). Both a and b are converted to their base currency
+// to perform the operation, using their respective BaseCurrencyValues.
+// If their base currency differ, an error is returned.
 // Warning: The division isn't precise, the division precision is 16 decimals
 func (a Amount) Div(b *Amount) (*Amount, error) {
-	n, err := b.ToCurrency(a.Currency.Code)
-	if err != nil {
-		return nil, err
+	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
+		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
+			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
 	}
 
-	c := a.Value.Div(*n.Value)
-	n.Value = &c
-	return n, nil
+	c := a.BaseCurrencyValue().Div(*b.BaseCurrencyValue())
+	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
+	return n.ToCurrency(a.Currency.Code)
 }
 
 // String returns the amount value with the given number of decimals
