@@ -6,7 +6,7 @@ import (
 
 // Amount represents an amount in a given currency
 type Amount struct {
-	Trader   *Trader          `json:"trader"`
+	Trader   *Trader          `json:"-"`
 	Value    *decimal.Decimal `json:"value"`
 	Currency *Currency        `json:"currency"`
 }
@@ -57,9 +57,9 @@ func (a Amount) BaseCurrencyValue() *decimal.Decimal {
 // BaseCurrencyAmount returns a new Amount representing the Amount converted
 // to the base currency of the Trader. If the Currency of the Amount is already
 // the base currency, the Amount is returned directly
-func (a *Amount) BaseCurrencyAmount() *Amount {
+func (a Amount) BaseCurrencyAmount() *Amount {
 	if a.Currency.Is(a.Trader.BaseCurrency.Code) {
-		return a
+		return &a
 	}
 
 	v := a.Value.Div(*a.Currency.Value)
@@ -70,9 +70,9 @@ func (a *Amount) BaseCurrencyAmount() *Amount {
 // ToCurrency converts the Amount to the given Currency. If the given Currency
 // is the same as the currency one of the Amount, the Amount is returned
 // directly
-func (a *Amount) ToCurrency(code string) (*Amount, error) {
+func (a Amount) ToCurrency(code string) (*Amount, error) {
 	if a.Currency.Is(code) {
-		return a, nil
+		return &a, nil
 	}
 
 	b := a.BaseCurrencyAmount()
@@ -87,4 +87,69 @@ func (a *Amount) ToCurrency(code string) (*Amount, error) {
 
 	v := b.Value.Mul(*c.Value)
 	return a.Trader.NewAmount(&v, code)
+}
+
+// Add returns a new Amount corresponding to the sum of a and b. The
+// Currency of the returned amount is the same as the Currency of a (structure
+// on which Add(b) is called). The Trader of b is used to convert b to the
+// currency of a in order to do the addition. An error is returned if the
+// currency of a is not found in the Currencies slice of the Trader of b
+func (a Amount) Add(b *Amount) (*Amount, error) {
+	n, err := b.ToCurrency(a.Currency.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	c := a.Value.Add(*n.Value)
+	n.Value = &c
+	return n, nil
+}
+
+// Sub returns a new Amount corresponding to the substraction of b from a. The
+// Currency of the returned amount is the same as the Currency of a (structure
+// on which Sub(b) is called). The Trader of b is used to convert b to the
+// currency of a in order to do the substraction. An error is returned if the
+// currency of a is not found in the Currencies slice of the Trader of b
+func (a Amount) Sub(b *Amount) (*Amount, error) {
+	n, err := b.ToCurrency(a.Currency.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	c := a.Value.Sub(*b.Value)
+	n.Value = &c
+	return n, nil
+}
+
+// Mul returns a new Amount corresponding to the multiplication of a and b. The
+// Currency of the returned amount is the same as the Currency of a (structure
+// on which Mul(b) is called). The Trader of b is used to convert b to the
+// currency of a in order to do the multiplication. An error is returned if the
+// currency of a is not found in the Currencies slice of the Trader of b
+func (a Amount) Mul(b *Amount) (*Amount, error) {
+	n, err := b.ToCurrency(a.Currency.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	c := a.Value.Mul(*n.Value)
+	n.Value = &c
+	return n, nil
+}
+
+// Div returns a new Amount corresponding to the division of a by b. The
+// Currency of the returned amount is the same as the Currency of a (structure
+// on which Div(b) is called). The Trader of b is used to convert b to the
+// currency of a in order to do the division. An error is returned if the
+// currency of a is not found in the Currencies slice of the Trader of b.
+// Warning: The division isn't precise, the division precision is 16 decimals
+func (a Amount) Div(b *Amount) (*Amount, error) {
+	n, err := b.ToCurrency(a.Currency.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	c := a.Value.Div(*n.Value)
+	n.Value = &c
+	return n, nil
 }

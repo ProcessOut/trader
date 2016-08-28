@@ -13,7 +13,7 @@ func getTrader() *Trader {
 		NewCurrency("USD", &usd),
 		NewCurrency("EUR", &eur),
 	}
-	trader, _ := New(currencies)
+	trader, _ := New(currencies, "usd")
 	return trader
 }
 
@@ -33,6 +33,9 @@ func TestNewAmount(t *testing.T) {
 	if amount == nil {
 		t.Error("The returned amount shouldn't have been nil")
 	}
+	if amount.Trader != trader {
+		t.Error("The trader should be the same pointer")
+	}
 
 	amount, err = trader.NewAmount(&d, "eur")
 	if err != nil {
@@ -40,6 +43,9 @@ func TestNewAmount(t *testing.T) {
 	}
 	if amount == nil {
 		t.Error("The returned amount shouldn't have been nil")
+	}
+	if amount.Trader != trader {
+		t.Error("The trader should be the same pointer")
 	}
 }
 
@@ -58,6 +64,9 @@ func TestNewAmountFromFloat(t *testing.T) {
 	if amount == nil {
 		t.Error("The returned amount shouldn't have been nil")
 	}
+	if amount.Trader != trader {
+		t.Error("The trader should be the same pointer")
+	}
 
 	amount, err = trader.NewAmountFromFloat(4.2, "eur")
 	if err != nil {
@@ -65,6 +74,9 @@ func TestNewAmountFromFloat(t *testing.T) {
 	}
 	if amount == nil {
 		t.Error("The returned amount shouldn't have been nil")
+	}
+	if amount.Trader != trader {
+		t.Error("The trader should be the same pointer")
 	}
 }
 
@@ -88,6 +100,9 @@ func TestNewAmountFromString(t *testing.T) {
 	if amount == nil {
 		t.Error("The returned amount shouldn't have been nil")
 	}
+	if amount.Trader != trader {
+		t.Error("The trader should be the same pointer")
+	}
 
 	amount, err = trader.NewAmountFromString("4.2", "eur")
 	if err != nil {
@@ -95,6 +110,9 @@ func TestNewAmountFromString(t *testing.T) {
 	}
 	if amount == nil {
 		t.Error("The returned amount shouldn't have been nil")
+	}
+	if amount.Trader != trader {
+		t.Error("The trader should be the same pointer")
 	}
 }
 
@@ -119,7 +137,7 @@ func TestBaseCurrencyAmount(t *testing.T) {
 	amount, _ := trader.NewAmountFromString("1", "usd")
 
 	a := amount.BaseCurrencyAmount()
-	if a != amount {
+	if a.Value != amount.Value || a.Currency.Code != amount.Currency.Code {
 		t.Error("The base currency amount should have stayed the same")
 	}
 
@@ -147,7 +165,7 @@ func TestToCurrency(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if a != amount {
+	if a.Value != amount.Value {
 		t.Error("Amount shouldn't have changed")
 	}
 

@@ -10,7 +10,7 @@ func TestNew(t *testing.T) {
 	usd := decimal.NewFromFloat(1)
 	eur := decimal.NewFromFloat(0.8)
 	currencies := Currencies{}
-	trader, err := New(currencies)
+	trader, err := New(currencies, "usd")
 	if err == nil {
 		t.Error("An error should have been returned")
 	}
@@ -22,7 +22,15 @@ func TestNew(t *testing.T) {
 		NewCurrency("USD", &usd),
 		NewCurrency("EUR", &eur),
 	}
-	trader, err = New(currencies)
+	trader, err = New(currencies, "bad")
+	if err == nil {
+		t.Error("An error should have been returned")
+	}
+	if trader != nil {
+		t.Error("The trader should have been nil")
+	}
+
+	trader, err = New(currencies, "usd")
 	if err != nil {
 		t.Error("No error should have happened")
 	}
@@ -38,7 +46,7 @@ func TestSetBaseCurrency(t *testing.T) {
 		NewCurrency("USD", &usd),
 		NewCurrency("EUR", &eur),
 	}
-	trader, err := New(currencies)
+	trader, err := New(currencies, "usd")
 	if trader.BaseCurrency.Code != "USD" {
 		t.Error("The default base currency was not correctly set")
 	}

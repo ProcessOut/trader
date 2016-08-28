@@ -1,7 +1,5 @@
 package trader
 
-import "errors"
-
 // Trader is the structure containing the conversions values used to
 // handle the amount conversions
 type Trader struct {
@@ -9,17 +7,18 @@ type Trader struct {
 	BaseCurrency *Currency  `json:"base_currency"`
 }
 
-// New creates a new Trader structure. The default base Currency of the Trader
-// is set to the first Currency of the given currencies slice. The currencies
-// slice must contain at least 1 currency
-func New(currencies Currencies) (*Trader, error) {
-	if len(currencies) == 0 {
-		return nil, errors.New("The currencies must contain at least one currency.")
+// New creates a new Trader structure, and sets the base currency to the
+// given currency code. This currency code should be provided in the
+// currencies slice, otherwise an error is returned
+func New(currencies Currencies, code string) (*Trader, error) {
+	c, err := currencies.Find(code)
+	if err != nil {
+		return nil, err
 	}
 
 	return &Trader{
 		Currencies:   currencies,
-		BaseCurrency: currencies[0],
+		BaseCurrency: c,
 	}, nil
 }
 
