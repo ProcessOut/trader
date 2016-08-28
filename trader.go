@@ -2,29 +2,29 @@
 //
 // Working with Trader is as follows:
 //
-// 		// We first want to define the currencies we support
-// 		usd, _ := decimal.NewFromString("1") // USD will be our base currency
-// 		eur, _ := decimal.NewFromString("0.8")
-// 		currencies := trader.Currencies{
-//     		trader.NewCurrency("USD", &usd),
-//     		trader.NewCurrency("EUR", &eur),
-// 		}
+// 	// We first want to define the currencies we support
+// 	usd, _ := decimal.NewFromString("1") // USD will be our base currency
+// 	eur, _ := decimal.NewFromString("0.8")
+// 	currencies := trader.Currencies{
+//  	trader.NewCurrency("USD", &usd),
+//  	trader.NewCurrency("EUR", &eur),
+// 	}
 //
-//		// We may now create our trader, and set its base currency to the US dollar
-// 		t, _ := trader.New(currencies, "usd")
+//	// We may now create our trader, and set its base currency to the US dollar
+// 	t, _ := trader.New(currencies, "usd")
 //
-// 		// Now that we have our trader, we can create amounts
-// 		amount, _ := t.NewAmountFromString("42.42", "USD")
+// 	// Now that we have our trader, we can create amounts
+// 	amount, _ := t.NewAmountFromString("42.42", "USD")
 //
-// 		// With this amount, we can now do currency conversions
-// 		amountEUR, _ := amount.ToCurrency("EUR")
+// 	// With this amount, we can now do currency conversions
+// 	amountEUR, _ := amount.ToCurrency("EUR")
 //
-// 		// We could also add two amounts with different currencies
-// 		USDPlusEUR, _ := amount.Add(amountEUR)
+// 	// We could also add two amounts with different currencies
+// 	USDPlusEUR, _ := amount.Add(amountEUR)
 //
-// 		// The result is:
-// 		// USD(42.00) + EUR(USD(42.00)) == USD(42.00) + USD(42.00) = USD(82.00)
-// 		fmt.Println(USDPlusEUR.String())
+// 	// The result is:
+// 	// USD(42.00) + EUR(USD(42.00)) == USD(42.00) + USD(42.00) = USD(82.00)
+// 	fmt.Println(USDPlusEUR.String())
 package trader
 
 // Trader is the structure containing the conversions values used to
