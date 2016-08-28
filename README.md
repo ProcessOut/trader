@@ -1,10 +1,12 @@
 # trader
 
-[![GoDoc]https://godoc.org/github.com/ProcessOut/trader?status.svg)](https://godoc.org/github.com/ProcessOut/trader)
+[![GoDoc](https://godoc.org/github.com/ProcessOut/trader?status.svg)](https://godoc.org/github.com/ProcessOut/trader)
 
-Trader takes charge of the amounts handling and currency conversions
+Trader takes charge of the amounts handling and currency conversions. It makes
+operations on amounts in different currencies easy to perform, and uses
+Arbitrary-precision fixed-point decimal numbers.
 
-## usage example
+## Usage
 
 ```go
 // We first want to define the currencies we support
@@ -34,3 +36,7 @@ USDPlusEUR := amount.Add(amountEUR)
 // USD(42.00) + EUR(USD(42.00)) == USD(42.00) + USD(42.00) = USD(82.00)
 fmt.Println(USDPlusEUR.String())
 ```
+
+## Notes
+
+Trader uses the package github.com/shopspring/decimal to perform its calculations.
