@@ -10,8 +10,8 @@ arbitrary-precision fixed-point decimal numbers.
 
 ```go
 // We first want to define the currencies we support
-usd := decimal.NewFromString("1") // USD will be our base currency
-eur := decimal.NewFromString("0.8")
+usd, _ := decimal.NewFromString("1") // USD will be our base currency
+eur, _ := decimal.NewFromString("0.8")
 currencies := trader.Currencies{
     trader.NewCurrency("USD", &usd),
     trader.NewCurrency("EUR", &eur),
@@ -21,16 +21,16 @@ currencies := trader.Currencies{
 t, _ := trader.New(currencies, "usd")
 
 // Now that we have our trader, we can create amounts
-price := decimal.NewFromString("42.42")
-amount := t.NewAmount(&price, "USD")
-// or amount := trader.NewAmountFromString("42.42", "USD")
-// or amount := trader.NewAmountFromFloat(42.42, "USD")
+price, _ := decimal.NewFromString("42.42")
+amount, _ := t.NewAmount(&price, "USD")
+// or amount, _ := trader.NewAmountFromString("42.42", "USD")
+// or amount, _ := trader.NewAmountFromFloat(42.42, "USD")
 
 // With this amount, we can now do currency conversions
-amountEUR := amount.ToCurrency("EUR")
+amountEUR, _ := amount.ToCurrency("EUR")
 
 // We could also add two amounts with different currencies
-USDPlusEUR := amount.Add(amountEUR)
+USDPlusEUR, _ := amount.Add(amountEUR)
 
 // The result is:
 // USD(42.00) + EUR(USD(42.00)) == USD(42.00) + USD(42.00) = USD(82.00)
