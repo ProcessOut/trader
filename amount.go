@@ -153,3 +153,8 @@ func (a Amount) Div(b *Amount) (*Amount, error) {
 	n.Value = &c
 	return n, nil
 }
+
+// String returns the amount value with the given number of decimals
+func (a Amount) String(decimals int32) string {
+	return a.Value.StringFixed(decimals)
+}
