@@ -39,4 +39,5 @@ fmt.Println(USDPlusEUR.String())
 
 ## Notes
 
-Trader uses the package github.com/shopspring/decimal to perform its calculations.
+Trader uses the package [github.com/shopspring/decimal](github.com/shopspring/decimal)
+to perform its calculations.
