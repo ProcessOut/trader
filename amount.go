@@ -13,7 +13,7 @@ type Amount struct {
 
 // NewAmount creates a new amount structure from a decimal and a currency
 func (t *Trader) NewAmount(d *decimal.Decimal, code string) (*Amount, error) {
-	c, err := t.FindCurrency(code)
+	c, err := t.Currencies.Find(code)
 	if err != nil {
 		return nil, err
 	}
@@ -40,4 +40,51 @@ func (t *Trader) NewAmountFromString(s, c string) (*Amount, error) {
 		return nil, err
 	}
 	return t.NewAmount(&d, c)
+}
+
+// BaseCurrencyValue returns the value converted to the base currency
+// of the Trader. If the Currency of the Amount is already the base currency,
+// the value is returned directly
+func (a Amount) BaseCurrencyValue() *decimal.Decimal {
+	if a.Currency.Code == a.Trader.BaseCurrency.Code {
+		return a.Value
+	}
+
+	v := a.Value.Div(*a.Currency.Value)
+	return &v
+}
+
+// BaseCurrencyAmount returns a new Amount representing the Amount converted
+// to the base currency of the Trader. If the Currency of the Amount is already
+// the base currency, the Amount is returned directly
+func (a *Amount) BaseCurrencyAmount() *Amount {
+	if a.Currency.Code == a.Trader.BaseCurrency.Code {
+		return a
+	}
+
+	v := a.Value.Div(*a.Currency.Value)
+	r, _ := a.Trader.NewAmount(&v, a.Trader.BaseCurrency.Code)
+	return r
+}
+
+// ToCurrency converts the Amount to the given Currency. If the given Currency
+// is the same as the currency one of the Amount, the Amount is returned
+// directly
+func (a *Amount) ToCurrency(code string) (*Amount, error) {
+	if a.Currency.Code == code {
+		return a, nil
+	}
+
+	b := a.BaseCurrencyAmount()
+	if b.Currency.Code == code {
+		return b, nil
+	}
+
+	c, err := a.Trader.Currencies.Find(code)
+	if err != nil {
+		return nil, err
+	}
+
+	v := b.Value.Mul(*c.Value)
+	return a.Trader.NewAmount(&v, code)
 }
