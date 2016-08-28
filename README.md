@@ -4,7 +4,7 @@
 
 Trader takes charge of the amounts handling and currency conversions. It makes
 operations on amounts in different currencies easy to perform, and uses
-Arbitrary-precision fixed-point decimal numbers.
+arbitrary-precision fixed-point decimal numbers.
 
 ## Usage
 
