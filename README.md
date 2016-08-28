@@ -12,17 +12,17 @@ arbitrary-precision fixed-point decimal numbers.
 // We first want to define the currencies we support
 usd := decimal.NewFromString("1") // USD will be our base currency
 eur := decimal.NewFromString("0.8")
-currencies := Currencies{
-    NewCurrency("USD", &usd),
-    NewCurrency("EUR", &eur),
+currencies := trader.Currencies{
+    trader.NewCurrency("USD", &usd),
+    trader.NewCurrency("EUR", &eur),
 }
 
 // We may now create our trader, and set its base currency to the US dollar
-trader, _ := New(currencies, "usd")
+t, _ := trader.New(currencies, "usd")
 
 // Now that we have our trader, we can create amounts
 price := decimal.NewFromString("42.42")
-amount := trader.NewAmount(&price, "USD")
+amount := t.NewAmount(&price, "USD")
 // or amount := trader.NewAmountFromString("42.42", "USD")
 // or amount := trader.NewAmountFromFloat(42.42, "USD")
 
