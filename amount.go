@@ -46,7 +46,7 @@ func (t *Trader) NewAmountFromString(s, c string) (*Amount, error) {
 // of the Trader. If the Currency of the Amount is already the base currency,
 // the value is returned directly
 func (a Amount) BaseCurrencyValue() *decimal.Decimal {
-	if a.Currency.Code == a.Trader.BaseCurrency.Code {
+	if a.Currency.Is(a.Trader.BaseCurrency.Code) {
 		return a.Value
 	}
 
@@ -58,7 +58,7 @@ func (a Amount) BaseCurrencyValue() *decimal.Decimal {
 // to the base currency of the Trader. If the Currency of the Amount is already
 // the base currency, the Amount is returned directly
 func (a *Amount) BaseCurrencyAmount() *Amount {
-	if a.Currency.Code == a.Trader.BaseCurrency.Code {
+	if a.Currency.Is(a.Trader.BaseCurrency.Code) {
 		return a
 	}
 
@@ -71,12 +71,12 @@ func (a *Amount) BaseCurrencyAmount() *Amount {
 // is the same as the currency one of the Amount, the Amount is returned
 // directly
 func (a *Amount) ToCurrency(code string) (*Amount, error) {
-	if a.Currency.Code == code {
+	if a.Currency.Is(code) {
 		return a, nil
 	}
 
 	b := a.BaseCurrencyAmount()
-	if b.Currency.Code == code {
+	if b.Currency.Is(code) {
 		return b, nil
 	}
 

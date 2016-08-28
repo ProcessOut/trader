@@ -143,6 +143,14 @@ func TestToCurrency(t *testing.T) {
 		t.Error("There should have been an error")
 	}
 
+	a, err = amount.ToCurrency("usd")
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if a != amount {
+		t.Error("Amount shouldn't have changed")
+	}
+
 	a, err = amount.ToCurrency("eur")
 	if err != nil {
 		t.Error("There shouldn't have been an error")

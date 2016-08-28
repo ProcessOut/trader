@@ -49,3 +49,18 @@ func TestFind(t *testing.T) {
 		t.Error("The currency should have bene found")
 	}
 }
+
+func TestIs(t *testing.T) {
+	d := decimal.NewFromFloat(1)
+	c := NewCurrency("test", &d)
+
+	if c.Is("bad") {
+		t.Error("Should have returned false")
+	}
+	if !c.Is("test") {
+		t.Error("Should have returned true")
+	}
+	if !c.Is("TeSt") {
+		t.Error("Should have returned true")
+	}
+}
