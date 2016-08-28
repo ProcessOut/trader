@@ -1,0 +1,3 @@
+package: github.com/processout/trader
+import:
+- package: github.com/shopspring/decimal
