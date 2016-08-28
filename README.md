@@ -6,6 +6,12 @@ Trader takes charge of the amounts handling and currency conversions. It makes
 operations on amounts in different currencies easy to perform, and uses
 arbitrary-precision fixed-point decimal numbers.
 
+## Installation
+
+```
+go get github.com/processout/trader
+```
+
 ## Usage
 
 ```go
