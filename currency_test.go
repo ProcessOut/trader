@@ -20,7 +20,7 @@ func TestNewCurrency(t *testing.T) {
 	}
 }
 
-func TestFind(t *testing.T) {
+func TestCurrencies_Find(t *testing.T) {
 	d := decimal.NewFromFloat(1)
 	c := NewCurrency("test", &d)
 	cs := Currencies{c}
@@ -50,7 +50,7 @@ func TestFind(t *testing.T) {
 	}
 }
 
-func TestIs(t *testing.T) {
+func TestCurrency_Is(t *testing.T) {
 	d := decimal.NewFromFloat(1)
 	c := NewCurrency("test", &d)
 

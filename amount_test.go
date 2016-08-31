@@ -144,7 +144,7 @@ func TestNewAmountFromString(t *testing.T) {
 	}
 }
 
-func TestToCurrency(t *testing.T) {
+func TestAmount_ToCurrency(t *testing.T) {
 	trader := getTrader()
 	amount, _ := trader.NewAmountFromString("2", "usd")
 
@@ -178,7 +178,7 @@ func TestToCurrency(t *testing.T) {
 	}
 }
 
-func TestAdd(t *testing.T) {
+func TestAmount_Add(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("2.3", "usd")
@@ -234,7 +234,7 @@ func TestAdd(t *testing.T) {
 	}
 }
 
-func TestSub(t *testing.T) {
+func TestAmount_Sub(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("3.2", "usd")

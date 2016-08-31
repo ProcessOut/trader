@@ -39,7 +39,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func TestSetBaseCurrency(t *testing.T) {
+func TestTrader_SetBaseCurrency(t *testing.T) {
 	usd := decimal.NewFromFloat(1)
 	eur := decimal.NewFromFloat(0.8)
 	currencies := Currencies{
