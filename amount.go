@@ -44,29 +44,17 @@ func (t *Trader) NewAmountFromString(s, c string) (*Amount, error) {
 	return t.NewAmount(&d, c)
 }
 
-// BaseCurrencyValue returns the value converted to the base currency
-// of the Trader. If the Currency of the Amount is already the base currency,
-// the value is returned directly
-func (a Amount) BaseCurrencyValue() *decimal.Decimal {
-	if a.Currency.Is(a.Trader.BaseCurrency.Code) {
-		return a.Value
+// RateTo returns the rate that would be applied to convert the amount of a
+// to the target currency. An error is returned if the provided code is not
+// in the Amount Trader currency list
+func (a Amount) RateTo(code string) (*decimal.Decimal, error) {
+	c, err := a.Trader.Currencies.Find(code)
+	if err != nil {
+		return nil, err
 	}
 
-	v := a.Value.Div(*a.Currency.Value)
-	return &v
-}
-
-// BaseCurrencyAmount returns a new Amount representing the Amount converted
-// to the base currency of the Trader. If the Currency of the Amount is already
-// the base currency, the Amount is returned directly
-func (a Amount) BaseCurrencyAmount() *Amount {
-	if a.Currency.Is(a.Trader.BaseCurrency.Code) {
-		return &a
-	}
-
-	v := a.Value.Div(*a.Currency.Value)
-	r, _ := a.Trader.NewAmount(&v, a.Trader.BaseCurrency.Code)
-	return r
+	r := c.Value.Div(*a.Currency.Value)
+	return &r, nil
 }
 
 // ToCurrency converts the Amount to the given Currency. If the given Currency
@@ -77,83 +65,41 @@ func (a Amount) ToCurrency(code string) (*Amount, error) {
 		return &a, nil
 	}
 
-	b := a.BaseCurrencyAmount()
-	if b.Currency.Is(code) {
-		return b, nil
-	}
-
-	c, err := a.Trader.Currencies.Find(code)
+	rate, err := a.RateTo(code)
 	if err != nil {
 		return nil, err
 	}
 
-	v := b.Value.Mul(*c.Value)
+	v := a.Value.Mul(*rate)
 	return a.Trader.NewAmount(&v, code)
 }
 
 // Add returns a new Amount corresponding to the sum of a and b. The
-// Currency of the returned amount is the same as the Currency of a (structure
-// on which Add(b) is called). Both a and b are converted to their base currency
-// to perform the operation, using their respective BaseCurrencyValues.
-// If their base currency differ, an error is returned
+// currency of the returned amount is the same as the Currency of a.
+// The returned Amount will use the Trader of a for any future operation.
+// If the trader of a and b is not the same, an error is returned
 func (a Amount) Add(b *Amount) (*Amount, error) {
-	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
-		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
-			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
+	if !a.Trader.Is(b.Trader) {
+		return nil, fmt.Errorf("The trader of a and b are not the same.")
 	}
 
-	c := a.BaseCurrencyValue().Add(*b.BaseCurrencyValue())
-	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
-	return n.ToCurrency(a.Currency.Code)
+	n, _ := b.ToCurrency(a.Currency.Code)
+	r := a.Value.Add(*n.Value)
+	return a.Trader.NewAmount(&r, a.Currency.Code)
 }
 
 // Sub returns a new Amount corresponding to the substraction of b from a. The
-// Currency of the returned amount is the same as the Currency of a (structure
-// on which Sub(b) is called). Both a and b are converted to their base currency
-// to perform the operation, using their respective BaseCurrencyValues.
-// If their base currency differ, an error is returned
+// currency of the returned amount is the same as the Currency of a.
+// The returned Amount will use the Trader of a for any future operation.
+// If the trader of a and b is not the same, an error is returned
 func (a Amount) Sub(b *Amount) (*Amount, error) {
-	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
-		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
-			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
+	if !a.Trader.Is(b.Trader) {
+		return nil, fmt.Errorf("The trader of a and b are not the same.")
 	}
 
-	c := a.BaseCurrencyValue().Sub(*b.BaseCurrencyValue())
-	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
-	return n.ToCurrency(a.Currency.Code)
-}
-
-// Mul returns a new Amount corresponding to the multiplication of a and b. The
-// Currency of the returned amount is the same as the Currency of a (structure
-// on which Mul(b) is called). Both a and b are converted to their base currency
-// to perform the operation, using their respective BaseCurrencyValues.
-// If their base currency differ, an error is returned
-func (a Amount) Mul(b *Amount) (*Amount, error) {
-	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
-		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
-			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
-	}
-
-	c := a.BaseCurrencyValue().Mul(*b.BaseCurrencyValue())
-	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
-	return n.ToCurrency(a.Currency.Code)
-}
-
-// Div returns a new Amount corresponding to the division of a by b. The
-// Currency of the returned amount is the same as the Currency of a (structure
-// on which Div(b) is called). Both a and b are converted to their base currency
-// to perform the operation, using their respective BaseCurrencyValues.
-// If their base currency differ, an error is returned.
-// Warning: The division isn't precise, the division precision is 16 decimals
-func (a Amount) Div(b *Amount) (*Amount, error) {
-	if a.Trader.BaseCurrency.Code != b.Trader.BaseCurrency.Code {
-		return nil, fmt.Errorf("The base currency of a and b differ: %s & %s",
-			a.Trader.BaseCurrency.Code, b.Trader.BaseCurrency.Code)
-	}
-
-	c := a.BaseCurrencyValue().Div(*b.BaseCurrencyValue())
-	n, _ := a.Trader.NewAmount(&c, a.Trader.BaseCurrency.Code)
-	return n.ToCurrency(a.Currency.Code)
+	n, _ := b.ToCurrency(a.Currency.Code)
+	r := a.Value.Sub(*n.Value)
+	return a.Trader.NewAmount(&r, a.Currency.Code)
 }
 
 // String returns the amount value with the given number of decimals

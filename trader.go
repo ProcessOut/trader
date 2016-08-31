@@ -35,3 +35,33 @@ func (t *Trader) SetBaseCurrency(code string) error {
 	t.BaseCurrency = c
 	return nil
 }
+
+// Is compares two trader. If the base currency of t and trader are not the same,
+// returns false. If trader does not contain a currency from t, returns false.
+// If one of the currencies of trader does not have the same value as the one
+// of t, returns false. If the number of currencies supported by t and trader
+// is not the same, returns false. Returns true otherwise
+func (t Trader) Is(trader *Trader) bool {
+	if !t.BaseCurrency.Is(trader.BaseCurrency.Code) ||
+		t.BaseCurrency.Value.Cmp(*trader.BaseCurrency.Value) != 0 {
+
+		return false
+	}
+
+	if len(t.Currencies) != len(trader.Currencies) {
+		return false
+	}
+
+	for _, c := range t.Currencies {
+		tc, err := trader.Currencies.Find(c.Code)
+		if err != nil {
+			return false
+		}
+
+		if c.Value.Cmp(*tc.Value) != 0 {
+			return false
+		}
+	}
+
+	return true
+}
