@@ -64,3 +64,27 @@ func TestCurrency_Is(t *testing.T) {
 		t.Error("Should have returned true")
 	}
 }
+
+func TestCurrency_DecimalPlaces(t *testing.T) {
+	d := decimal.NewFromFloat(1)
+
+	c := NewCurrency("usd", &d)
+	if c.DecimalPlaces() != 2 {
+		t.Error("The decimal places should have been 2")
+	}
+
+	c = NewCurrency("bif", &d)
+	if c.DecimalPlaces() != 0 {
+		t.Error("The decimal places should have been 0")
+	}
+
+	c = NewCurrency("bhd", &d)
+	if c.DecimalPlaces() != 3 {
+		t.Error("The decimal places should have been 3")
+	}
+
+	c = NewCurrency("clf", &d)
+	if c.DecimalPlaces() != 4 {
+		t.Error("The decimal places should have been 4")
+	}
+}
