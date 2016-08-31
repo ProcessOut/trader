@@ -28,9 +28,9 @@ func Example() {
 	USDPlusEUR, _ := amount.Add(amountEUR)
 
 	// The result is:
-	// USD(42.00) + EUR(USD(42.00)) == USD(42.00) + USD(42.00) = USD(82.00)
+	// USD(42.42) + EUR(USD(42.42)) == USD(42.42) + USD(42.42) = USD(82.42)
 	fmt.Println(USDPlusEUR.String(2))
-	// Output: 82.00
+	// Output: 84.84
 }
 
 func ExampleNew() {
@@ -47,32 +47,60 @@ func ExampleNew() {
 }
 
 func ExampleTrader_NewAmount() {
+	// We first want to define the currencies we support
+	usd, _ := decimal.NewFromString("1") // USD will be our base currency
+	eur, _ := decimal.NewFromString("0.8")
+
 	// Create a mock Trader
-	t, _ := New(Currencies{}, "USD")
+	t, _ := New(Currencies{
+		NewCurrency("USD", &usd),
+		NewCurrency("EUR", &eur),
+	}, "USD")
 
 	d, _ := decimal.NewFromString("42.42")
 	t.NewAmount(&d, "usd")
 }
 
 func ExampleTrader_NewAmountFromString() {
+	// We first want to define the currencies we support
+	usd, _ := decimal.NewFromString("1") // USD will be our base currency
+	eur, _ := decimal.NewFromString("0.8")
+
 	// Create a mock Trader
-	t, _ := New(Currencies{}, "USD")
+	t, _ := New(Currencies{
+		NewCurrency("USD", &usd),
+		NewCurrency("EUR", &eur),
+	}, "USD")
 
 	t.NewAmountFromString("42.42", "usd")
 }
 
 func ExampleTrader_NewAmountFromFloat() {
+	// We first want to define the currencies we support
+	usd, _ := decimal.NewFromString("1") // USD will be our base currency
+	eur, _ := decimal.NewFromString("0.8")
+
 	// Create a mock Trader
-	t, _ := New(Currencies{}, "USD")
+	t, _ := New(Currencies{
+		NewCurrency("USD", &usd),
+		NewCurrency("EUR", &eur),
+	}, "USD")
 
 	t.NewAmountFromFloat(42.42, "usd")
 }
 
 func ExampleAmount_String() {
-	// Create a mock Trader
-	t, _ := New(Currencies{}, "USD")
+	// We first want to define the currencies we support
+	usd, _ := decimal.NewFromString("1") // USD will be our base currency
+	eur, _ := decimal.NewFromString("0.8")
 
-	a, _ := t.NewAmountFromString("42.42", "usd")
+	// Create a mock Trader
+	t, _ := New(Currencies{
+		NewCurrency("USD", &usd),
+		NewCurrency("EUR", &eur),
+	}, "USD")
+
+	a, _ := t.NewAmountFromFloat(42.42, "usd")
 
 	fmt.Println(a.String(3))
 	// Output: 42.420
