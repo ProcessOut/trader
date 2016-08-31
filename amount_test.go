@@ -329,6 +329,26 @@ func TestCmp(t *testing.T) {
 	}
 }
 
+func TestAmount_Int64(t *testing.T) {
+	trader := getTrader()
+	amount, _ := trader.NewAmountFromString("2.3", "usd")
+
+	if amount.Int64() != 230 {
+		t.Error("Wrong conversion")
+	}
+
+	amount.Currency.Code = "BHD"
+	if amount.Int64() != 2300 {
+		t.Error("Wrong conversion")
+	}
+
+	amount.Currency.Code = "USD"
+	amount, _ = trader.NewAmountFromString("2.34", "usd")
+	if amount.Int64() != 234 {
+		t.Error("Wrong conversion")
+	}
+}
+
 func TestAmount_String(t *testing.T) {
 	trader := getTrader()
 	amount, _ := trader.NewAmountFromString("42.123456", "usd")

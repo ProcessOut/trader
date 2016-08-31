@@ -2,6 +2,7 @@ package trader
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/shopspring/decimal"
 )
@@ -116,6 +117,14 @@ func (a Amount) Cmp(b *Amount) (int, error) {
 	n, _ := b.ToCurrency(a.Currency.Code)
 	c := a.Value.Cmp(*n.Value)
 	return c, nil
+}
+
+// Int64 translates an amount into an in64 by adjusting its amount to the
+// lowest possible decimal of its currency (ex: USD: 10.23 -> 1023)
+func (a Amount) Int64() int64 {
+	return a.Value.Mul(
+		decimal.NewFromFloat(math.Pow10(a.Currency.DecimalPlaces())),
+	).IntPart()
 }
 
 // String returns the amount value with the given number of decimals
