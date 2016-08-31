@@ -289,3 +289,21 @@ func TestAmount_Sub(t *testing.T) {
 		t.Error("The amount currency was incorrectly set")
 	}
 }
+
+func TestAmount_String(t *testing.T) {
+	trader := getTrader()
+	amount, _ := trader.NewAmountFromString("42.123456", "usd")
+
+	if amount.String(0) != "42" {
+		t.Error("The formatted amount was incorrect: " + amount.String(0))
+	}
+	if amount.String(2) != "42.12" {
+		t.Error("The formatted amount was incorrect: " + amount.String(2))
+	}
+	if amount.String(6) != "42.123456" {
+		t.Error("The formatted amount was incorrect: " + amount.String(6))
+	}
+	if amount.String(8) != "42.12345600" {
+		t.Error("The formatted amount was incorrect: " + amount.String(8))
+	}
+}
