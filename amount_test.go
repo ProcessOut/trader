@@ -290,6 +290,45 @@ func TestAmount_Sub(t *testing.T) {
 	}
 }
 
+func TestCmp(t *testing.T) {
+	trader := getTrader()
+	trader2 := getTrader2()
+	amount, _ := trader.NewAmountFromString("2.3", "usd")
+	amount2, _ := trader2.NewAmountFromString("3.2", "bad")
+
+	_, err := amount.Cmp(amount2)
+	if err == nil {
+		t.Error("There should have been an error")
+	}
+
+	amount2, _ = trader.NewAmountFromString("3.2", "usd")
+	r, err := amount.Cmp(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if r >= 0 {
+		t.Error("Answer should have been negative (2.3 < 3.2)")
+	}
+
+	amount2, _ = trader.NewAmountFromString("2.14", "usd")
+	r, err = amount.Cmp(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if r <= 0 {
+		t.Error("Answer should have been positive (2.3 > 2.14)")
+	}
+
+	amount2, _ = trader.NewAmountFromString("2.3", "usd")
+	r, err = amount.Cmp(amount2)
+	if err != nil {
+		t.Error("There shouldn't have been an error")
+	}
+	if r != 0 {
+		t.Error("Answer should have been 0 (2.3 == 2.14)")
+	}
+}
+
 func TestAmount_String(t *testing.T) {
 	trader := getTrader()
 	amount, _ := trader.NewAmountFromString("42.123456", "usd")

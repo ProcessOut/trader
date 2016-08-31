@@ -102,6 +102,22 @@ func (a Amount) Sub(b *Amount) (*Amount, error) {
 	return a.Trader.NewAmount(&r, a.Currency.Code)
 }
 
+// Cmp compares a and b precisely in this order.
+// Returns:
+//	- = 0 if a is equal to b
+//  - < 0 if a is smaller than b
+//  - > 0 if a is greater than b
+// To compare a and b, b is first converted to the currency of a
+func (a Amount) Cmp(b *Amount) (int, error) {
+	if !a.Trader.Is(b.Trader) {
+		return 0, fmt.Errorf("The trader of a and b are not the same.")
+	}
+
+	n, _ := b.ToCurrency(a.Currency.Code)
+	c := a.Value.Cmp(*n.Value)
+	return c, nil
+}
+
 // String returns the amount value with the given number of decimals
 func (a Amount) String(decimals int32) string {
 	return a.Value.StringFixed(decimals)
