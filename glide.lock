@@ -1,6 +1,6 @@
-hash: b31ccef95a8d426981851a324cd4278a1773d175b85598911370fb2257f3954e
-updated: 2016-08-27T22:20:00.725571124-04:00
+hash: 82ba0832d5906883bd9cacf12158552411ea2a3897090796f53c6bd92db999a5
+updated: 2016-09-23T14:37:30.8591614-04:00
 imports:
-- name: github.com/shopspring/decimal
-  version: 74d668a796fa3734c552fb907d9b83146d0bebee
-devImports: []
+- name: github.com/processout/decimal
+  version: 4142ddfba9e5bbfc1882bfa6fbf77478b8cf3c42
+testImports: []
