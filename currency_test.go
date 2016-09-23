@@ -3,7 +3,7 @@ package trader
 import (
 	"testing"
 
-	"github.com/shopspring/decimal"
+	"github.com/processout/decimal"
 )
 
 func TestNewCurrency(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/shopspring/decimal"
+	"github.com/processout/decimal"
 )
 
 // Amount represents an amount in a given currency

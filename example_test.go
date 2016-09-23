@@ -3,7 +3,7 @@ package trader
 import (
 	"fmt"
 
-	"github.com/shopspring/decimal"
+	"github.com/processout/decimal"
 )
 
 func Example() {
