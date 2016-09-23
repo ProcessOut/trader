@@ -1,0 +1,6 @@
+hash: 5e5dad3795a0b5589a3ecf7a84b3ed6f57c75437b04dd0287ba380569c19109f
+updated: 2016-09-23T15:28:50.084574414-04:00
+imports:
+- name: github.com/processout/decimal
+  version: 4142ddfba9e5bbfc1882bfa6fbf77478b8cf3c42
+testImports: []
