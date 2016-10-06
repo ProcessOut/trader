@@ -9,7 +9,7 @@ arbitrary-precision fixed-point decimal numbers.
 ## Installation
 
 ```bash
-go get gopkg.in/processout/trader.v1
+go get gopkg.in/processout/trader
 ```
 
 ## Usage
