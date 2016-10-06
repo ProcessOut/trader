@@ -5,7 +5,7 @@ package trader
 // handle the amount conversions
 type Trader struct {
 	Currencies   Currencies `json:"currencies"`
-	BaseCurrency *Currency  `json:"base_currency"`
+	BaseCurrency Currency   `json:"base_currency"`
 }
 
 // New creates a new Trader structure, and sets the base currency to the
@@ -20,7 +20,7 @@ func New(currencies Currencies, code CurrencyCode) (*Trader, error) {
 
 	return &Trader{
 		Currencies:   currencies,
-		BaseCurrency: c,
+		BaseCurrency: *c,
 	}, nil
 }
 
@@ -33,7 +33,7 @@ func (t *Trader) SetBaseCurrency(code CurrencyCode) error {
 		return err
 	}
 
-	t.BaseCurrency = c
+	t.BaseCurrency = *c
 	return nil
 }
 
@@ -44,7 +44,7 @@ func (t *Trader) SetBaseCurrency(code CurrencyCode) error {
 // is not the same, returns false. Returns true otherwise
 func (t Trader) Is(trader *Trader) bool {
 	if !t.BaseCurrency.Is(trader.BaseCurrency.Code) ||
-		t.BaseCurrency.Value.Cmp(*trader.BaseCurrency.Value) != 0 {
+		t.BaseCurrency.Value.Cmp(trader.BaseCurrency.Value) != 0 {
 
 		return false
 	}
@@ -59,7 +59,7 @@ func (t Trader) Is(trader *Trader) bool {
 			return false
 		}
 
-		if c.Value.Cmp(*tc.Value) != 0 {
+		if c.Value.Cmp(tc.Value) != 0 {
 			return false
 		}
 	}

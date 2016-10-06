@@ -26,12 +26,12 @@ type Currency struct {
 	// Code is the ISO 4217 code of the currency
 	Code CurrencyCode `json:"code"`
 	// Value is the value of the currency, relative to the base currency
-	Value *decimal.Decimal `json:"value"`
+	Value decimal.Decimal `json:"value"`
 }
 
 // NewCurrency creates a new Currency structure, but returns an error if the
 // currency code is not part of ISO 4217
-func NewCurrency(code CurrencyCode, v *decimal.Decimal) (*Currency, error) {
+func NewCurrency(code CurrencyCode, v decimal.Decimal) (*Currency, error) {
 	// Verify code:
 	if ok := code.Verify(); !ok {
 		return nil, errors.New("Currency `" + code.String() + "' does not exist")
