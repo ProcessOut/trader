@@ -1,6 +1,7 @@
 package trader
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -10,8 +11,14 @@ import (
 // CurrencyCode represents a currency code in the norm ISO 4217
 type CurrencyCode string
 
+// format sets the CurrencyCode to the right format
 func (c CurrencyCode) format() CurrencyCode {
 	return CurrencyCode(strings.ToUpper(string(c)))
+}
+
+// String to implement Stringer interface
+func (c CurrencyCode) String() string {
+	return string(c)
 }
 
 // Currency represents a currency and its value relative to the dollar
@@ -22,16 +29,17 @@ type Currency struct {
 	Value *decimal.Decimal `json:"value"`
 }
 
-// NewCurrency creates a new Currency structure
-func NewCurrency(code CurrencyCode, v *decimal.Decimal) *Currency {
+// NewCurrency creates a new Currency structure, but returns an error if the
+// currency code is not part of ISO 4217
+func NewCurrency(code CurrencyCode, v *decimal.Decimal) (*Currency, error) {
 	// Verify code:
 	if ok := code.Verify(); !ok {
-		panic("Currency `" + code + "' does not exist")
+		return nil, errors.New("Currency `" + code.String() + "' does not exist")
 	}
 	return &Currency{
 		Code:  code.format(),
 		Value: v,
-	}
+	}, nil
 }
 
 // Currencies represents a slice of Currencies
