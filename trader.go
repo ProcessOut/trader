@@ -1,6 +1,8 @@
 // Package trader takes charge of the amounts handling and currency conversions.
 package trader
 
+import "errors"
+
 // Trader is the structure containing the conversions values used to
 // handle the amount conversions
 type Trader struct {
@@ -12,6 +14,19 @@ type Trader struct {
 // given currency code. This currency code should be provided in the
 // currencies slice, otherwise an error is returned
 func New(currencies Currencies, code string) (*Trader, error) {
+	// Verify currencies
+	for _, c := range currencies {
+		if c != nil {
+			if ok := Verify(c.Code); !ok {
+				return nil, errors.New("Currency `" + c.Code + "' isn't part of ISO 4217")
+			}
+		}
+	}
+	if ok := Verify(code); !ok {
+		return nil, errors.New("Currency `" + code + "' isn't part of ISO 4217")
+	}
+
+	// Init trader
 	c, err := currencies.Find(code)
 	if err != nil {
 		return nil, err

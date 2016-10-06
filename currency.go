@@ -18,6 +18,9 @@ type Currency struct {
 // NewCurrency creates a new Currency structure
 func NewCurrency(code string, v *decimal.Decimal) *Currency {
 	// Verify code:
+	if ok := Verify(code); !ok {
+		panic("Currency `" + code + "' does not exist")
+	}
 	return &Currency{
 		Code:  strings.ToUpper(code),
 		Value: v,
