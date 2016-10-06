@@ -107,4 +107,12 @@ func TestTrader_Is(t *testing.T) {
 	if trader.Is(trader2) {
 		t.Error("The traders should have not been equal")
 	}
+
+	eur2 := decimal.NewFromFloat(0.81)
+	c4, _ := NewCurrency("EUR", &eur2)
+	currencies2 = Currencies{c1, c4}
+	trader2, _ = New(currencies2, "usd")
+	if trader.Is(trader2) {
+		t.Error("The traders should have not been equal")
+	}
 }

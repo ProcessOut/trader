@@ -32,3 +32,10 @@ func TestInformation(t *testing.T) {
 		t.Error("False positive")
 	}
 }
+
+func TestValidCurrencies(t *testing.T) {
+	v := ValidCurrencies()
+	if v == nil || len(v) == 0 {
+		t.Error("No valid currencies")
+	}
+}
