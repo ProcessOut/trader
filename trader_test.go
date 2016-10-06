@@ -14,27 +14,26 @@ func TestNew(t *testing.T) {
 	if err == nil {
 		t.Error("An error should have been returned")
 	}
-	if trader != nil {
-		t.Error("The trader should have been nil")
+	if !trader.Is(emptyTrader) {
+		t.Error("The trader should have been empty")
 	}
+	c1, _ := NewCurrency("USD", usd)
+	c2, _ := NewCurrency("EUR", eur)
 
-	currencies = Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("EUR", &eur),
-	}
+	currencies = Currencies{c1, c2}
 	trader, err = New(currencies, "bad")
 	if err == nil {
 		t.Error("An error should have been returned")
 	}
-	if trader != nil {
-		t.Error("The trader should have been nil")
+	if !trader.Is(emptyTrader) {
+		t.Error("The trader should have been empty")
 	}
 
 	trader, err = New(currencies, "usd")
 	if err != nil {
 		t.Error("No error should have happened")
 	}
-	if trader == nil {
+	if trader.Is(emptyTrader) {
 		t.Error("The trader should have been set")
 	}
 }
@@ -42,10 +41,9 @@ func TestNew(t *testing.T) {
 func TestTrader_SetBaseCurrency(t *testing.T) {
 	usd := decimal.NewFromFloat(1)
 	eur := decimal.NewFromFloat(0.8)
-	currencies := Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("EUR", &eur),
-	}
+	c1, _ := NewCurrency("USD", usd)
+	c2, _ := NewCurrency("EUR", eur)
+	currencies := Currencies{c1, c2}
 	trader, err := New(currencies, "usd")
 	if trader.BaseCurrency.Code != "USD" {
 		t.Error("The default base currency was not correctly set")
@@ -72,14 +70,10 @@ func TestTrader_Is(t *testing.T) {
 	usd := decimal.NewFromFloat(1)
 	eur := decimal.NewFromFloat(0.8)
 	bad := decimal.NewFromFloat(0.5)
-	currencies := Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("EUR", &eur),
-	}
-	currencies2 := Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("EUR", &eur),
-	}
+	c1, _ := NewCurrency("USD", usd)
+	c2, _ := NewCurrency("EUR", eur)
+	currencies := Currencies{c1, c2}
+	currencies2 := Currencies{c1, c2}
 	trader, _ := New(currencies, "usd")
 	trader2, _ := New(currencies2, "usd")
 
@@ -92,32 +86,31 @@ func TestTrader_Is(t *testing.T) {
 		t.Error("The traders should have not been equal")
 	}
 
-	currencies2 = Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("EUR", &bad),
-	}
+	currencies2 = Currencies{c1}
 
 	trader2, _ = New(currencies2, "usd")
 	if trader.Is(trader2) {
 		t.Error("The traders should have not been equal")
 	}
 
-	currencies2 = Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("BAD", &eur),
-	}
+	c3, _ := NewCurrency("GHC", bad)
+	currencies2 = Currencies{c1, c3}
 
 	trader2, _ = New(currencies2, "usd")
 	if trader.Is(trader2) {
 		t.Error("The traders should have not been equal")
 	}
 
-	currencies2 = Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("EUR", &eur),
-		NewCurrency("BAD", &bad),
+	currencies2 = Currencies{c1, c2, c3}
+
+	trader2, _ = New(currencies2, "usd")
+	if trader.Is(trader2) {
+		t.Error("The traders should have not been equal")
 	}
 
+	eur2 := decimal.NewFromFloat(0.81)
+	c4, _ := NewCurrency("EUR", eur2)
+	currencies2 = Currencies{c1, c4}
 	trader2, _ = New(currencies2, "usd")
 	if trader.Is(trader2) {
 		t.Error("The traders should have not been equal")

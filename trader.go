@@ -5,19 +5,22 @@ package trader
 // handle the amount conversions
 type Trader struct {
 	Currencies   Currencies `json:"currencies"`
-	BaseCurrency *Currency  `json:"base_currency"`
+	BaseCurrency Currency   `json:"base_currency"`
 }
+
+var emptyTrader = Trader{}
 
 // New creates a new Trader structure, and sets the base currency to the
 // given currency code. This currency code should be provided in the
 // currencies slice, otherwise an error is returned
-func New(currencies Currencies, code string) (*Trader, error) {
+func New(currencies Currencies, code CurrencyCode) (Trader, error) {
+	// Init trader
 	c, err := currencies.Find(code)
 	if err != nil {
-		return nil, err
+		return emptyTrader, err
 	}
 
-	return &Trader{
+	return Trader{
 		Currencies:   currencies,
 		BaseCurrency: c,
 	}, nil
@@ -26,7 +29,7 @@ func New(currencies Currencies, code string) (*Trader, error) {
 // SetBaseCurrency sets the base currency for the Trader, from the given
 // Currency code. If the currency code was not found in the currencies of the
 // Trader, an error is returned
-func (t *Trader) SetBaseCurrency(code string) error {
+func (t *Trader) SetBaseCurrency(code CurrencyCode) error {
 	c, err := t.Currencies.Find(code)
 	if err != nil {
 		return err
@@ -41,9 +44,9 @@ func (t *Trader) SetBaseCurrency(code string) error {
 // If one of the currencies of trader does not have the same value as the one
 // of t, returns false. If the number of currencies supported by t and trader
 // is not the same, returns false. Returns true otherwise
-func (t Trader) Is(trader *Trader) bool {
+func (t Trader) Is(trader Trader) bool {
 	if !t.BaseCurrency.Is(trader.BaseCurrency.Code) ||
-		t.BaseCurrency.Value.Cmp(*trader.BaseCurrency.Value) != 0 {
+		t.BaseCurrency.Value.Cmp(trader.BaseCurrency.Value) != 0 {
 
 		return false
 	}
@@ -58,7 +61,7 @@ func (t Trader) Is(trader *Trader) bool {
 			return false
 		}
 
-		if c.Value.Cmp(*tc.Value) != 0 {
+		if c.Value.Cmp(tc.Value) != 0 {
 			return false
 		}
 	}
