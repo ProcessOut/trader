@@ -8,26 +8,32 @@ arbitrary-precision fixed-point decimal numbers.
 
 ## Installation
 
-```
+```bash
 go get gopkg.in/processout/trader.v1
 ```
 
 ## Usage
 
+Notes:
+
+- All ISO 4217 currencies are supported, and they can be found in `currency-list.go`
+- Error handling isn't included here for brevity's sake
+
 ```go
 // We first want to define the currencies we support
-usd, _ := decimal.NewFromString("1") // USD will be our base currency
-eur, _ := decimal.NewFromString("0.8")
-currencies := trader.Currencies{
-    trader.NewCurrency("USD", &usd),
-    trader.NewCurrency("EUR", &eur),
-}
+usdV := decimal.NewFromFloat(1) // USD will be our base currency
+eurV := decimal.NewFromFloat(0.8)
+usd, _ := trader.NewCurrency("USD", &usdV) // returns error if
+eur, _ := trader.NewCurrency("eur", &eurV) // currency isn't ISO 4217
+
+// We add them to the list
+currencies := trader.Currencies{usd, eur}
 
 // We may now create our trader, and set its base currency to the US dollar
 t, _ := trader.New(currencies, "usd")
 
 // Now that we have our trader, we can create amounts
-price, _ := decimal.NewFromString("42.42")
+price, _ := decimal.NewFromFloat(42.42)
 amount, _ := t.NewAmount(&price, "USD")
 // or amount, _ := trader.NewAmountFromString("42.42", "USD")
 // or amount, _ := trader.NewAmountFromFloat(42.42, "USD")
