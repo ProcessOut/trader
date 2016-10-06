@@ -21,19 +21,19 @@ go get gopkg.in/processout/trader
 
 ```go
 // We first want to define the currencies we support
-usd, _ := NewCurrency("USD", decimal.NewFromFloat(1)) // Will be base currency
-eur, _ := NewCurrency("eur", decimal.NewFromFloat(0.8))
+usd, _ := trader.NewCurrency("USD", decimal.NewFromFloat(1)) // Will be base currency
+eur, _ := trader.NewCurrency("eur", decimal.NewFromFloat(0.8))
 
 // We add them to the list
-currencies := Currencies{usd, eur}
+currencies := trader.Currencies{usd, eur}
 
 // We may now create our trader, and set its base currency to the US dollar
-t, _ := New(currencies, "usd")
+t, _ := trader.New(currencies, "usd")
 
 // Now that we have our trader, we can create amounts
 amount, _ := t.NewAmount(decimal.NewFromFloat(42.42), "USD")
-// or amount, _ := NewAmountFromString("42.42", "USD")
-// or amount, _ := NewAmountFromFloat(42.42, "USD")
+// or amount, _ := t.NewAmountFromString("42.42", "USD")
+// or amount, _ := t.NewAmountFromFloat(42.42, "USD")
 
 // With this amount, we can now do currency conversions
 amountEUR, _ := amount.ToCurrency("EUR") // = "33.936"
