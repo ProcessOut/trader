@@ -19,6 +19,8 @@ go get gopkg.in/processout/trader
 - It makes sense that your base currency should always have a comparative value of 1
 - Take a look at example_test.go for more examples
 
+`import github.com/processout/trader`
+
 ```go
 // We first want to define the currencies we support
 usd, _ := trader.NewCurrency("USD", decimal.NewFromFloat(1)) // Will be base currency
