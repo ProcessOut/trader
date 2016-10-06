@@ -9,21 +9,20 @@ import (
 func getTrader() *Trader {
 	usd := decimal.NewFromFloat(1)
 	eur := decimal.NewFromFloat(0.8)
-	currencies := Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("EUR", &eur),
-	}
+	c1, _ := NewCurrency("USD", &usd)
+	c2, _ := NewCurrency("EUR", &eur)
+
+	currencies := Currencies{c1, c2}
 	trader, _ := New(currencies, "usd")
 	return trader
 }
 func getTrader2() *Trader {
 	usd := decimal.NewFromFloat(1)
 	eur := decimal.NewFromFloat(0.8)
-	currencies := Currencies{
-		NewCurrency("USD", &usd),
-		NewCurrency("BAD", &eur),
-	}
-	trader, _ := New(currencies, "bad")
+	c1, _ := NewCurrency("USD", &usd)
+	c2, _ := NewCurrency("GHC", &eur)
+	currencies := Currencies{c1, c2}
+	trader, _ := New(currencies, "ghc")
 	return trader
 }
 
@@ -31,7 +30,7 @@ func TestNewAmount(t *testing.T) {
 	trader := getTrader()
 	d, _ := decimal.NewFromString("4.2")
 
-	amount, err := trader.NewAmount(&d, "bad")
+	amount, err := trader.NewAmount(&d, "ghc")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -68,7 +67,7 @@ func TestNewAmount(t *testing.T) {
 func TestNewAmountFromFloat(t *testing.T) {
 	trader := getTrader()
 
-	amount, err := trader.NewAmountFromFloat(4.2, "bad")
+	amount, err := trader.NewAmountFromFloat(4.2, "ghc")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -105,12 +104,12 @@ func TestNewAmountFromFloat(t *testing.T) {
 func TestNewAmountFromString(t *testing.T) {
 	trader := getTrader()
 
-	amount, err := trader.NewAmountFromString("bad", "usd")
+	amount, err := trader.NewAmountFromString("ghc", "usd")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
 
-	amount, err = trader.NewAmountFromString("4.2", "bad")
+	amount, err = trader.NewAmountFromString("4.2", "ghc")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -148,7 +147,7 @@ func TestAmount_ToCurrency(t *testing.T) {
 	trader := getTrader()
 	amount, _ := trader.NewAmountFromString("2", "usd")
 
-	a, err := amount.ToCurrency("bad")
+	a, err := amount.ToCurrency("ghc")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -182,7 +181,7 @@ func TestAmount_Add(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("2.3", "usd")
-	amount2, _ := trader2.NewAmountFromString("3.2", "bad")
+	amount2, _ := trader2.NewAmountFromString("3.2", "ghc")
 
 	s, err := amount2.Add(amount)
 	if err == nil {
@@ -238,7 +237,7 @@ func TestAmount_Sub(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("3.2", "usd")
-	amount2, _ := trader2.NewAmountFromString("2.3", "bad")
+	amount2, _ := trader2.NewAmountFromString("2.3", "ghc")
 
 	s, err := amount2.Sub(amount)
 	if err == nil {
@@ -294,7 +293,7 @@ func TestCmp(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("2.3", "usd")
-	amount2, _ := trader2.NewAmountFromString("3.2", "bad")
+	amount2, _ := trader2.NewAmountFromString("3.2", "ghc")
 
 	_, err := amount.Cmp(amount2)
 	if err == nil {
