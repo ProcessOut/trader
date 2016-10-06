@@ -21,10 +21,8 @@ Notes:
 
 ```go
 // We first want to define the currencies we support
-usdV := decimal.NewFromFloat(1) // USD will be our base currency
-eurV := decimal.NewFromFloat(0.8)
-usd, _ := trader.NewCurrency("USD", &usdV) // returns error if
-eur, _ := trader.NewCurrency("eur", &eurV) // currency isn't ISO 4217
+usd, _ := trader.NewCurrency("USD", decimal.NewFromFloat(1)) // Will be base currency
+eur, _ := trader.NewCurrency("eur", decimal.NewFromFloat(0.8))
 
 // We add them to the list
 currencies := trader.Currencies{usd, eur}
