@@ -18,7 +18,7 @@ func (c CurrencyCode) format() CurrencyCode {
 
 // String to implement Stringer interface
 func (c CurrencyCode) String() string {
-	return string(c)
+	return string(c.format())
 }
 
 // Currency represents a currency and its value relative to the dollar
