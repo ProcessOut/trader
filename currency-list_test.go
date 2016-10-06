@@ -17,14 +17,18 @@ func TestVerify(t *testing.T) {
 	}
 }
 
-func TestFullName(t *testing.T) {
-	if c := CurrencyCode("AFA").FullName(); c != "Afghan Afghani" {
-		t.Error("Wrong name")
+func TestInformation(t *testing.T) {
+	if c := CurrencyCode("AED").Information(); c == nil ||
+		c.FullName != "United Arab Emirates dirham" ||
+		c.Number != 784 ||
+		c.Places != 2 ||
+		c.Countries[0] != "United Arab Emirates" {
+		t.Error("Wrong information")
 	}
-	if c := CurrencyCode("afa").FullName(); c != "Afghan Afghani" {
-		t.Error("Wrong name")
+	if c := CurrencyCode("aEd").Information(); c == nil || c.FullName != "United Arab Emirates dirham" {
+		t.Error("Wrong information")
 	}
-	if c := CurrencyCode("lel").FullName(); len(c) != 0 {
-		t.Error("Wrong name")
+	if c := CurrencyCode("lel").Information(); c != nil {
+		t.Error("False positive")
 	}
 }
