@@ -38,11 +38,9 @@ func Example() {
 func TestExampleNew(*testing.T) { ExampleNew() }
 func ExampleNew() {
 	// We first want to define the currencies we support
-	usd, _ := decimal.NewFromString("1") // USD will be our base currency
-	eur, _ := decimal.NewFromString("0.8")
-	c1, _ := NewCurrency("USD", usd)
-	c2, _ := NewCurrency("EUR", eur)
-	currencies := Currencies{c1, c2}
+	usd, _ := NewCurrency("USD", decimal.NewFromFloat(1))
+	eur, _ := NewCurrency("EUR", decimal.NewFromFloat(0.8))
+	currencies := Currencies{usd, eur}
 
 	// We may now create our trader, and set its base currency to the US dollar
 	New(currencies, "USD")
@@ -51,13 +49,13 @@ func ExampleNew() {
 func TestExampleTrader_NewAmount(*testing.T) { ExampleTrader_NewAmount() }
 func ExampleTrader_NewAmount() {
 	// We first want to define the currencies we support
-	usd, _ := decimal.NewFromString("1") // USD will be our base currency
-	eur, _ := decimal.NewFromString("0.8")
-	c1, _ := NewCurrency("USD", usd)
-	c2, _ := NewCurrency("EUR", eur)
+	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
+	eurRate, _ := decimal.NewFromString("0.8")
+	usd, _ := NewCurrency("USD", usdRate)
+	eur, _ := NewCurrency("EUR", eurRate)
 
 	// Create a mock Trader
-	t, _ := New(Currencies{c1, c2}, "USD")
+	t, _ := New(Currencies{usd, eur}, "USD")
 
 	d, _ := decimal.NewFromString("42.42")
 	t.NewAmount(d, "usd")
@@ -66,13 +64,13 @@ func ExampleTrader_NewAmount() {
 func TestExampleTrader_NewAmountFromString(*testing.T) { ExampleTrader_NewAmountFromString() }
 func ExampleTrader_NewAmountFromString() {
 	// We first want to define the currencies we support
-	usd, _ := decimal.NewFromString("1") // USD will be our base currency
-	eur, _ := decimal.NewFromString("0.8")
-	c1, _ := NewCurrency("USD", usd)
-	c2, _ := NewCurrency("EUR", eur)
+	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
+	eurRate, _ := decimal.NewFromString("0.8")
+	usd, _ := NewCurrency("USD", usdRate)
+	eur, _ := NewCurrency("EUR", eurRate)
 
 	// Create a mock Trader
-	t, _ := New(Currencies{c1, c2}, "USD")
+	t, _ := New(Currencies{usd, eur}, "USD")
 
 	t.NewAmountFromString("42.42", "usd")
 }
@@ -80,13 +78,13 @@ func ExampleTrader_NewAmountFromString() {
 func TestExampleTrader_NewAmountFromFloat(*testing.T) { ExampleTrader_NewAmountFromFloat() }
 func ExampleTrader_NewAmountFromFloat() {
 	// We first want to define the currencies we support
-	usd, _ := decimal.NewFromString("1") // USD will be our base currency
-	eur, _ := decimal.NewFromString("0.8")
-	c1, _ := NewCurrency("USD", usd)
-	c2, _ := NewCurrency("EUR", eur)
+	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
+	eurRate, _ := decimal.NewFromString("0.8")
+	usd, _ := NewCurrency("USD", usdRate)
+	eur, _ := NewCurrency("EUR", eurRate)
 
 	// Create a mock Trader
-	t, _ := New(Currencies{c1, c2}, "USD")
+	t, _ := New(Currencies{usd, eur}, "USD")
 
 	t.NewAmountFromFloat(42.42, "usd")
 }
@@ -94,13 +92,13 @@ func ExampleTrader_NewAmountFromFloat() {
 func TestExampleAmount_String(*testing.T) { ExampleAmount_String() }
 func ExampleAmount_String() {
 	// We first want to define the currencies we support
-	usd, _ := decimal.NewFromString("1") // USD will be our base currency
-	eur, _ := decimal.NewFromString("0.8")
-	c1, _ := NewCurrency("USD", usd)
-	c2, _ := NewCurrency("EUR", eur)
+	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
+	eurRate, _ := decimal.NewFromString("0.8")
+	usd, _ := NewCurrency("USD", usdRate)
+	eur, _ := NewCurrency("EUR", eurRate)
 
 	// Create a mock Trader
-	t, _ := New(Currencies{c1, c2}, "USD")
+	t, _ := New(Currencies{usd, eur}, "USD")
 
 	a, _ := t.NewAmountFromFloat(42.42, "usd")
 
