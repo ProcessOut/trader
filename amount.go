@@ -15,7 +15,7 @@ type Amount struct {
 }
 
 // NewAmount creates a new amount structure from a decimal and a currency
-func (t *Trader) NewAmount(d *decimal.Decimal, code string) (*Amount, error) {
+func (t *Trader) NewAmount(d *decimal.Decimal, code CurrencyCode) (*Amount, error) {
 	c, err := t.Currencies.Find(code)
 	if err != nil {
 		return nil, err
@@ -30,14 +30,14 @@ func (t *Trader) NewAmount(d *decimal.Decimal, code string) (*Amount, error) {
 
 // NewAmountFromFloat creates a new amount structure from a float and
 // a currency
-func (t *Trader) NewAmountFromFloat(f float64, c string) (*Amount, error) {
+func (t *Trader) NewAmountFromFloat(f float64, c CurrencyCode) (*Amount, error) {
 	d := decimal.NewFromFloat(f)
 	return t.NewAmount(&d, c)
 }
 
 // NewAmountFromString creates a new amount structure from a string
 // and a currency. Returns an error if the string could not be parsed
-func (t *Trader) NewAmountFromString(s, c string) (*Amount, error) {
+func (t *Trader) NewAmountFromString(s string, c CurrencyCode) (*Amount, error) {
 	d, err := decimal.NewFromString(s)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (t *Trader) NewAmountFromString(s, c string) (*Amount, error) {
 // RateTo returns the rate that would be applied to convert the amount of a
 // to the target currency. An error is returned if the provided code is not
 // in the Amount Trader currency list
-func (a Amount) RateTo(code string) (*decimal.Decimal, error) {
+func (a Amount) RateTo(code CurrencyCode) (*decimal.Decimal, error) {
 	c, err := a.Trader.Currencies.Find(code)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (a Amount) RateTo(code string) (*decimal.Decimal, error) {
 // ToCurrency converts the Amount to the given Currency. If the given Currency
 // is the same as the currency one of the Amount, the Amount is returned
 // directly
-func (a Amount) ToCurrency(code string) (*Amount, error) {
+func (a Amount) ToCurrency(code CurrencyCode) (*Amount, error) {
 	if a.Currency.Is(code) {
 		return &a, nil
 	}

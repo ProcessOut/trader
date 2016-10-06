@@ -7,22 +7,29 @@ import (
 	"github.com/processout/decimal"
 )
 
+// CurrencyCode represents a currency code in the norm ISO 4217
+type CurrencyCode string
+
+func (c CurrencyCode) format() CurrencyCode {
+	return CurrencyCode(strings.ToUpper(string(c)))
+}
+
 // Currency represents a currency and its value relative to the dollar
 type Currency struct {
 	// Code is the ISO 4217 code of the currency
-	Code string `json:"code"`
+	Code CurrencyCode `json:"code"`
 	// Value is the value of the currency, relative to the base currency
 	Value *decimal.Decimal `json:"value"`
 }
 
 // NewCurrency creates a new Currency structure
-func NewCurrency(code string, v *decimal.Decimal) *Currency {
+func NewCurrency(code CurrencyCode, v *decimal.Decimal) *Currency {
 	// Verify code:
-	if ok := Verify(code); !ok {
+	if ok := code.Verify(); !ok {
 		panic("Currency `" + code + "' does not exist")
 	}
 	return &Currency{
-		Code:  strings.ToUpper(code),
+		Code:  code.format(),
 		Value: v,
 	}
 }
@@ -32,7 +39,7 @@ type Currencies []*Currency
 
 // Find finds a Currency within the Currencies slice from the given
 // currency code, or returns an error if the currency code was not found
-func (c Currencies) Find(code string) (*Currency, error) {
+func (c Currencies) Find(code CurrencyCode) (*Currency, error) {
 	for _, v := range c {
 		if v.Is(code) {
 			return v, nil
@@ -44,8 +51,8 @@ func (c Currencies) Find(code string) (*Currency, error) {
 
 // Is returns true if the given code is the code of the Currency, false
 // otherwise
-func (c Currency) Is(code string) bool {
-	return c.Code == strings.ToUpper(code)
+func (c Currency) Is(code CurrencyCode) bool {
+	return c.Code == code.format()
 }
 
 // DecimalPlaces returns the number of decimal places a currency has

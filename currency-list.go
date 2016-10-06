@@ -1,23 +1,21 @@
 package trader
 
-import "strings"
-
 // Verify returns whether a currency is valid according to the ISO 4217
-func Verify(cur string) bool {
-	_, ok := ValidCurrencies[strings.ToUpper(cur)]
+func (c CurrencyCode) Verify() bool {
+	_, ok := ValidCurrencies[c.format()]
 	return ok
 }
 
 // FullName returns the name of the currency in plain letters. In the case
 // that the currency doesn't exist, an empty string will be returned.
-func FullName(cur string) string {
-	return ValidCurrencies[strings.ToUpper(cur)]
+func (c CurrencyCode) FullName() string {
+	return ValidCurrencies[c.format()]
 }
 
 var (
 	// ValidCurrencies according to the ISO 4217, though it is recommended
 	// to pass through Verify() or FullName() to access this map.
-	ValidCurrencies = map[string]string{
+	ValidCurrencies = map[CurrencyCode]string{
 		"AFA": "Afghan Afghani",
 		"AWG": "Aruban Florin",
 		"AUD": "Australian Dollars",
