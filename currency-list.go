@@ -29,7 +29,7 @@ func (c CurrencyCode) Information() *CurrencyInformation {
 }
 
 // ValidCurrencies according to the ISO 4217, though it is recommended
-// to pass through Verify() or FullName() to access this map.
+// to pass through Verify() or Information() to access this map.
 // This was parsed from https://en.wikipedia.org/wiki/ISO_4217#cite_note-ReferenceA-6
 func ValidCurrencies() map[CurrencyCode]CurrencyInformation {
 	return validCurrencies
