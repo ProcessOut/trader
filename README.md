@@ -19,7 +19,7 @@ Notes:
 - All ISO 4217 currencies are supported, and they can be found in `currency-list.go`
 - Error handling isn't included here for brevity's sake
 - It makes sense that your base currency should always have a comparative value of 1
-- Takes a look at example_test.go for more examples
+- Take a look at example_test.go for more examples
 
 ```go
 // We first want to define the currencies we support
