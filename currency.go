@@ -29,35 +29,35 @@ type Currency struct {
 	Value decimal.Decimal `json:"value"`
 }
 
+// emptyCurrency represents an empty currency
+var emptyCurrency = Currency{}
+
 // NewCurrency creates a new Currency structure, but returns an error if the
 // currency code is not part of ISO 4217
-func NewCurrency(code CurrencyCode, v decimal.Decimal) (*Currency, error) {
+func NewCurrency(code CurrencyCode, v decimal.Decimal) (Currency, error) {
 	// Verify code:
 	if ok := code.Verify(); !ok {
-		return nil, errors.New("Currency `" + code.String() + "' does not exist")
+		return emptyCurrency, errors.New("Currency `" + code.String() + "' does not exist")
 	}
-	return &Currency{
+	return Currency{
 		Code:  code.format(),
 		Value: v,
 	}, nil
 }
 
 // Currencies represents a slice of Currencies
-type Currencies []*Currency
+type Currencies []Currency
 
 // Find finds a Currency within the Currencies slice from the given
 // currency code, or returns an error if the currency code was not found
-func (c Currencies) Find(code CurrencyCode) (*Currency, error) {
+func (c Currencies) Find(code CurrencyCode) (Currency, error) {
 	for _, v := range c {
-		if v == nil {
-			continue
-		}
 		if v.Is(code) {
 			return v, nil
 		}
 	}
 
-	return nil, fmt.Errorf("The currency code %s could not be found.", code)
+	return emptyCurrency, fmt.Errorf("The currency code %s could not be found.", code)
 }
 
 // Is returns true if the given code is the code of the Currency, false

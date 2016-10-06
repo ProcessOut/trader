@@ -6,21 +6,17 @@ import (
 	"github.com/processout/decimal"
 )
 
-func getTrader() *Trader {
-	usd := decimal.NewFromFloat(1)
-	eur := decimal.NewFromFloat(0.8)
-	c1, _ := NewCurrency("USD", &usd)
-	c2, _ := NewCurrency("EUR", &eur)
+func getTrader() Trader {
+	c1, _ := NewCurrency("USD", decimal.NewFromFloat(1))
+	c2, _ := NewCurrency("EUR", decimal.NewFromFloat(0.8))
 
 	currencies := Currencies{c1, c2}
 	trader, _ := New(currencies, "usd")
 	return trader
 }
-func getTrader2() *Trader {
-	usd := decimal.NewFromFloat(1)
-	eur := decimal.NewFromFloat(0.8)
-	c1, _ := NewCurrency("USD", &usd)
-	c2, _ := NewCurrency("gel", &eur)
+func getTrader2() Trader {
+	c1, _ := NewCurrency("USD", decimal.NewFromFloat(1))
+	c2, _ := NewCurrency("gel", decimal.NewFromFloat(0.8))
 	currencies := Currencies{c1, c2}
 	trader, _ := New(currencies, "gel")
 	return trader
@@ -30,34 +26,28 @@ func TestNewAmount(t *testing.T) {
 	trader := getTrader()
 	d, _ := decimal.NewFromString("4.2")
 
-	amount, err := trader.NewAmount(&d, "gel")
+	amount, err := trader.NewAmount(d, "gel")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
 
-	amount, err = trader.NewAmount(&d, "usd")
+	amount, err = trader.NewAmount(d, "usd")
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if amount == nil {
-		t.Error("The returned amount shouldn't have been nil")
-	}
-	if amount.Trader != trader {
-		t.Error("The trader should be the same pointer")
+	if amount.IsEmpty() {
+		t.Error("The returned amount shouldn't have been empty")
 	}
 	if amount.String(3) != "4.200" {
 		t.Error("Wrong value set: " + amount.String(3))
 	}
 
-	amount, err = trader.NewAmount(&d, "eur")
+	amount, err = trader.NewAmount(d, "eur")
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if amount == nil {
-		t.Error("The returned amount shouldn't have been nil")
-	}
-	if amount.Trader != trader {
-		t.Error("The trader should be the same pointer")
+	if amount.IsEmpty() {
+		t.Error("The returned amount shouldn't have been empty")
 	}
 	if amount.String(3) != "4.200" {
 		t.Error("Wrong value set: " + amount.String(3))
@@ -76,11 +66,8 @@ func TestNewAmountFromFloat(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if amount == nil {
-		t.Error("The returned amount shouldn't have been nil")
-	}
-	if amount.Trader != trader {
-		t.Error("The trader should be the same pointer")
+	if amount.IsEmpty() {
+		t.Error("The returned amount shouldn't have been empty")
 	}
 	if amount.String(3) != "4.200" {
 		t.Error("Wrong value set: " + amount.String(3))
@@ -90,11 +77,8 @@ func TestNewAmountFromFloat(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if amount == nil {
-		t.Error("The returned amount shouldn't have been nil")
-	}
-	if amount.Trader != trader {
-		t.Error("The trader should be the same pointer")
+	if amount.IsEmpty() {
+		t.Error("The returned amount shouldn't have been empty")
 	}
 	if amount.String(3) != "4.200" {
 		t.Error("Wrong value set: " + amount.String(3))
@@ -118,11 +102,8 @@ func TestNewAmountFromString(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if amount == nil {
-		t.Error("The returned amount shouldn't have been nil")
-	}
-	if amount.Trader != trader {
-		t.Error("The trader should be the same pointer")
+	if amount.IsEmpty() {
+		t.Error("The returned amount shouldn't have been empty")
 	}
 	if amount.String(3) != "4.200" {
 		t.Error("Wrong value set: " + amount.String(3))
@@ -132,11 +113,8 @@ func TestNewAmountFromString(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if amount == nil {
-		t.Error("The returned amount shouldn't have been nil")
-	}
-	if amount.Trader != trader {
-		t.Error("The trader should be the same pointer")
+	if amount.IsEmpty() {
+		t.Error("The returned amount shouldn't have been empty")
 	}
 	if amount.String(3) != "4.200" {
 		t.Error("Wrong value set: " + amount.String(3))
@@ -193,7 +171,7 @@ func TestAmount_Add(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if s == nil {
+	if s.IsEmpty() {
 		t.Error("A new amount should have been returned")
 	}
 	if s.String(3) != "5.500" {
@@ -208,7 +186,7 @@ func TestAmount_Add(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if s == nil {
+	if s.IsEmpty() {
 		t.Error("A new amount should have been returned")
 	}
 	if s.String(3) != "5.500" {
@@ -222,7 +200,7 @@ func TestAmount_Add(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if s == nil {
+	if s.IsEmpty() {
 		t.Error("A new amount should have been returned")
 	}
 	if s.String(3) != "4.400" {
@@ -249,7 +227,7 @@ func TestAmount_Sub(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if s == nil {
+	if s.IsEmpty() {
 		t.Error("A new amount should have been returned")
 	}
 	if s.String(3) != "0.900" {
@@ -264,7 +242,7 @@ func TestAmount_Sub(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if s == nil {
+	if s.IsEmpty() {
 		t.Error("A new amount should have been returned")
 	}
 	if s.String(3) != "0.900" {
@@ -278,7 +256,7 @@ func TestAmount_Sub(t *testing.T) {
 	if err != nil {
 		t.Error("There shouldn't have been an error")
 	}
-	if s == nil {
+	if s.IsEmpty() {
 		t.Error("A new amount should have been returned")
 	}
 	if s.String(3) != "-0.720" {
