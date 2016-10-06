@@ -20,9 +20,9 @@ func getTrader2() *Trader {
 	usd := decimal.NewFromFloat(1)
 	eur := decimal.NewFromFloat(0.8)
 	c1, _ := NewCurrency("USD", &usd)
-	c2, _ := NewCurrency("GHC", &eur)
+	c2, _ := NewCurrency("gel", &eur)
 	currencies := Currencies{c1, c2}
-	trader, _ := New(currencies, "ghc")
+	trader, _ := New(currencies, "gel")
 	return trader
 }
 
@@ -30,7 +30,7 @@ func TestNewAmount(t *testing.T) {
 	trader := getTrader()
 	d, _ := decimal.NewFromString("4.2")
 
-	amount, err := trader.NewAmount(&d, "ghc")
+	amount, err := trader.NewAmount(&d, "gel")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -67,7 +67,7 @@ func TestNewAmount(t *testing.T) {
 func TestNewAmountFromFloat(t *testing.T) {
 	trader := getTrader()
 
-	amount, err := trader.NewAmountFromFloat(4.2, "ghc")
+	amount, err := trader.NewAmountFromFloat(4.2, "gel")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -104,12 +104,12 @@ func TestNewAmountFromFloat(t *testing.T) {
 func TestNewAmountFromString(t *testing.T) {
 	trader := getTrader()
 
-	amount, err := trader.NewAmountFromString("ghc", "usd")
+	amount, err := trader.NewAmountFromString("gel", "usd")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
 
-	amount, err = trader.NewAmountFromString("4.2", "ghc")
+	amount, err = trader.NewAmountFromString("4.2", "gel")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -147,7 +147,7 @@ func TestAmount_ToCurrency(t *testing.T) {
 	trader := getTrader()
 	amount, _ := trader.NewAmountFromString("2", "usd")
 
-	a, err := amount.ToCurrency("ghc")
+	a, err := amount.ToCurrency("gel")
 	if err == nil {
 		t.Error("There should have been an error")
 	}
@@ -181,7 +181,7 @@ func TestAmount_Add(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("2.3", "usd")
-	amount2, _ := trader2.NewAmountFromString("3.2", "ghc")
+	amount2, _ := trader2.NewAmountFromString("3.2", "gel")
 
 	s, err := amount2.Add(amount)
 	if err == nil {
@@ -237,7 +237,7 @@ func TestAmount_Sub(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("3.2", "usd")
-	amount2, _ := trader2.NewAmountFromString("2.3", "ghc")
+	amount2, _ := trader2.NewAmountFromString("2.3", "gel")
 
 	s, err := amount2.Sub(amount)
 	if err == nil {
@@ -293,7 +293,7 @@ func TestCmp(t *testing.T) {
 	trader := getTrader()
 	trader2 := getTrader2()
 	amount, _ := trader.NewAmountFromString("2.3", "usd")
-	amount2, _ := trader2.NewAmountFromString("3.2", "ghc")
+	amount2, _ := trader2.NewAmountFromString("3.2", "gel")
 
 	_, err := amount.Cmp(amount2)
 	if err == nil {

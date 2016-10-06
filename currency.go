@@ -49,6 +49,9 @@ type Currencies []*Currency
 // currency code, or returns an error if the currency code was not found
 func (c Currencies) Find(code CurrencyCode) (*Currency, error) {
 	for _, v := range c {
+		if v == nil {
+			continue
+		}
 		if v.Is(code) {
 			return v, nil
 		}

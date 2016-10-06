@@ -86,7 +86,7 @@ func TestTrader_Is(t *testing.T) {
 		t.Error("The traders should have not been equal")
 	}
 
-	currencies2 = Currencies{c1, c2}
+	currencies2 = Currencies{c1}
 
 	trader2, _ = New(currencies2, "usd")
 	if trader.Is(trader2) {
