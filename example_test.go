@@ -2,12 +2,10 @@ package trader
 
 import (
 	"fmt"
-	"testing"
 
 	"github.com/processout/decimal"
 )
 
-func TestExample(*testing.T) { Example() }
 func Example() {
 	// We first want to define the currencies we support
 	usd, _ := NewCurrency("USD", decimal.NewFromFloat(1)) // Will be base currency
@@ -35,7 +33,6 @@ func Example() {
 	fmt.Println(USDPlusEUR.String(2)) // Prints 84.84
 }
 
-func TestExampleNew(*testing.T) { ExampleNew() }
 func ExampleNew() {
 	// We first want to define the currencies we support
 	usd, _ := NewCurrency("USD", decimal.NewFromFloat(1))
@@ -46,7 +43,6 @@ func ExampleNew() {
 	New(currencies, "USD")
 }
 
-func TestExampleTrader_NewAmount(*testing.T) { ExampleTrader_NewAmount() }
 func ExampleTrader_NewAmount() {
 	// We first want to define the currencies we support
 	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
@@ -61,7 +57,6 @@ func ExampleTrader_NewAmount() {
 	t.NewAmount(d, "usd")
 }
 
-func TestExampleTrader_NewAmountFromString(*testing.T) { ExampleTrader_NewAmountFromString() }
 func ExampleTrader_NewAmountFromString() {
 	// We first want to define the currencies we support
 	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
@@ -75,7 +70,6 @@ func ExampleTrader_NewAmountFromString() {
 	t.NewAmountFromString("42.42", "usd")
 }
 
-func TestExampleTrader_NewAmountFromFloat(*testing.T) { ExampleTrader_NewAmountFromFloat() }
 func ExampleTrader_NewAmountFromFloat() {
 	// We first want to define the currencies we support
 	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
@@ -89,7 +83,6 @@ func ExampleTrader_NewAmountFromFloat() {
 	t.NewAmountFromFloat(42.42, "usd")
 }
 
-func TestExampleAmount_String(*testing.T) { ExampleAmount_String() }
 func ExampleAmount_String() {
 	// We first want to define the currencies we support
 	usdRate, _ := decimal.NewFromString("1") // USD will be our base currency
