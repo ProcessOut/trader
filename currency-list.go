@@ -4,11 +4,8 @@ import "strings"
 
 // Verify returns whether a currency is valid according to the ISO 4217
 func Verify(cur string) bool {
-	cur = strings.ToUpper(cur)
-	if ValidCurrencies[cur] != "" {
-		return true
-	}
-	return false
+	_, ok := ValidCurrencies[strings.ToUpper(cur)]
+	return ok
 }
 
 // FullName returns the name of the currency in plain letters. In the case
