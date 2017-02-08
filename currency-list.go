@@ -60,6 +60,7 @@ var (
 		"BRL": CurrencyInformation{986, 2, "Brazilian real", []string{"Brazil"}},
 		"BSD": CurrencyInformation{44, 2, "Bahamian dollar", []string{"Bahamas"}},
 		"BTC": CurrencyInformation{0, 8, "Bitcoin", []string{}},
+		"XBT": CurrencyInformation{0, 8, "Bitcoin", []string{}},
 		"BTN": CurrencyInformation{64, 2, "Bhutanese ngultrum", []string{"Bhutan"}},
 		"BWP": CurrencyInformation{72, 2, "Botswana pula", []string{"Botswana"}},
 		"BYN": CurrencyInformation{933, 2, "Belarusian ruble", []string{"Belarus"}},
