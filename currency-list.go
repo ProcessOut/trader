@@ -35,6 +35,7 @@ func ValidCurrencies() map[CurrencyCode]CurrencyInformation {
 	return validCurrencies
 }
 
+// Unofficial currencies have an iso 4217 number of 0 (BTC, XBT, ETH)
 var (
 	validCurrencies = map[CurrencyCode]CurrencyInformation{
 		"AED": CurrencyInformation{784, 2, "United Arab Emirates dirham", []string{"United Arab Emirates"}},
@@ -59,6 +60,8 @@ var (
 		"BOV": CurrencyInformation{984, 2, "Bolivian Mvdol (funds code)", []string{"Bolivia"}},
 		"BRL": CurrencyInformation{986, 2, "Brazilian real", []string{"Brazil"}},
 		"BSD": CurrencyInformation{44, 2, "Bahamian dollar", []string{"Bahamas"}},
+		"BTC": CurrencyInformation{0, 8, "Bitcoin", []string{}},
+		"XBT": CurrencyInformation{0, 8, "Bitcoin", []string{}},
 		"BTN": CurrencyInformation{64, 2, "Bhutanese ngultrum", []string{"Bhutan"}},
 		"BWP": CurrencyInformation{72, 2, "Botswana pula", []string{"Botswana"}},
 		"BYN": CurrencyInformation{933, 2, "Belarusian ruble", []string{"Belarus"}},
@@ -86,6 +89,7 @@ var (
 		"EGP": CurrencyInformation{818, 2, "Egyptian pound", []string{"Egypt", "auxiliary in Gaza Strip"}},
 		"ERN": CurrencyInformation{232, 2, "Eritrean nakfa", []string{"Eritrea"}},
 		"ETB": CurrencyInformation{230, 2, "Ethiopian birr", []string{"Ethiopia"}},
+		"ETH": CurrencyInformation{0, 2, "Ether", []string{}},
 		"EUR": CurrencyInformation{978, 2, "Euro", []string{"Akrotiri and Dhekelia", "Andorra (AD)", "Austria (AT)", "Belgium (BE)", "Cyprus (CY)", "Estonia (EE)", "Finland (FI)", "France (FR)", "Germany (DE)", "Greece (GR)", "Guadeloupe (GP)", "Ireland (IE)", "Italy (IT)", "Kosovo", "Latvia (LV)", "Lithuania (LT)", "Luxembourg (LU)", "Malta (MT)", "Martinique (MQ)", "Mayotte (YT)", "Monaco (MC)", "Montenegro (ME)", "Netherlands (NL)", "Portugal (PT)", "Réunion (RE)", "Saint Barthélemy (BL)", "Saint Pierre and Miquelon (PM)", "San Marino (SM)", "Slovakia (SK)", "Slovenia (SI)", "Spain (ES)", "Vatican City (VA); see Eurozone"}},
 		"FJD": CurrencyInformation{242, 2, "Fiji dollar", []string{"Fiji"}},
 		"FKP": CurrencyInformation{238, 2, "Falkland Islands pound", []string{"Falkland Islands (pegged to GBP 1:1)"}},
