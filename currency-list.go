@@ -87,6 +87,7 @@ var (
 		"EGP": CurrencyInformation{818, 2, "Egyptian pound", []string{"Egypt", "auxiliary in Gaza Strip"}},
 		"ERN": CurrencyInformation{232, 2, "Eritrean nakfa", []string{"Eritrea"}},
 		"ETB": CurrencyInformation{230, 2, "Ethiopian birr", []string{"Ethiopia"}},
+		"ETH": CurrencyInformation{0, 2, "Ether", []string{}},
 		"EUR": CurrencyInformation{978, 2, "Euro", []string{"Akrotiri and Dhekelia", "Andorra (AD)", "Austria (AT)", "Belgium (BE)", "Cyprus (CY)", "Estonia (EE)", "Finland (FI)", "France (FR)", "Germany (DE)", "Greece (GR)", "Guadeloupe (GP)", "Ireland (IE)", "Italy (IT)", "Kosovo", "Latvia (LV)", "Lithuania (LT)", "Luxembourg (LU)", "Malta (MT)", "Martinique (MQ)", "Mayotte (YT)", "Monaco (MC)", "Montenegro (ME)", "Netherlands (NL)", "Portugal (PT)", "Réunion (RE)", "Saint Barthélemy (BL)", "Saint Pierre and Miquelon (PM)", "San Marino (SM)", "Slovakia (SK)", "Slovenia (SI)", "Spain (ES)", "Vatican City (VA); see Eurozone"}},
 		"FJD": CurrencyInformation{242, 2, "Fiji dollar", []string{"Fiji"}},
 		"FKP": CurrencyInformation{238, 2, "Falkland Islands pound", []string{"Falkland Islands (pegged to GBP 1:1)"}},
