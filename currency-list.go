@@ -35,6 +35,7 @@ func ValidCurrencies() map[CurrencyCode]CurrencyInformation {
 	return validCurrencies
 }
 
+// Unofficial currencies have an iso 4217 number of 0 (BTC, XBT, ETH)
 var (
 	validCurrencies = map[CurrencyCode]CurrencyInformation{
 		"AED": CurrencyInformation{784, 2, "United Arab Emirates dirham", []string{"United Arab Emirates"}},
